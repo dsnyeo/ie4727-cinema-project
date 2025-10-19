@@ -31,7 +31,7 @@ session_start();
         </ul>
       </nav>
       </div>
-      
+        <div>
         <?php if (isset($_SESSION['sess_user'])): ?>
           <span class="welcome_text">
             👋 Welcome, 
@@ -43,6 +43,7 @@ session_start();
         <?php else: ?>
           <a class="btn btn_ghost" href="login-main.php">LOGIN</a>
         <?php endif; ?>
+        </div>
       </div>
     </div>
     
