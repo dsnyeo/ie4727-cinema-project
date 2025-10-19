@@ -1,0 +1,9 @@
+CREATE TABLE users (
+    UserID INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    FirstName CHAR(40),
+    LastName CHAR(40),
+    Username VARCHAR(20) NOT NULL,
+    Email VARCHAR(40) NOT NULL,
+    UserPassword VARCHAR(40) NOT NULL,
+    isAdmin BOOLEAN NOT NULL
+);

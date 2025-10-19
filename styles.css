@@ -336,6 +336,97 @@ body {
   transform: translateY(0);
 }
 
+/* Login Page */
+/* Center login box */
+  body.login_page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #000;
+    color: #fff;
+    padding-top: var(--header-h);
+    padding-bottom: var(--footer-h);
+    flex-direction: column;
+  }
+    .login_box {
+   background: rgba(20, 20, 20, 0.9);
+  border: none;
+  border-radius: 12px;
+  padding: 60px 70px;
+  width: 480px;                    /* wider box */
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);      /* glassy feel */
+  transition: transform 0.2s ease;;
+    }
+
+    .login_box h2 {
+      font-size: 18px;
+      margin-bottom: 24px;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid #fff;
+      padding-bottom: 10px;
+    }
+
+    .login_box label {
+      display: block;
+      text-align: left;
+      font-size: 13px;
+      margin-top: 15px;
+      margin-bottom: 4px;
+    }
+
+    .login_box input[type="text"],
+    .login_box input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #555;
+      border-radius: 4px;
+      background: #222;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .login_box input[type="text"]:focus,
+    .login_box input[type="password"]:focus {
+      border-color: #FFD700;
+      outline: none;
+    }
+
+    .login_box .btn {
+      margin-top: 24px;
+      width: 100%;
+      background: transparent;
+      border: 1px solid #fff;
+      color: #fff;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .login_box .btn:hover {
+      background: #fff;
+      color: #000;
+    }
+
+    .login_box p {
+      font-size: 12px;
+      margin-top: 16px;
+      color: #ccc;
+    }
+
+    .login_box a {
+      color: #FFD700;
+      text-decoration: none;
+    }
+
+    .login_box a:hover {
+      text-decoration: underline;
+    }
+
 /* Responsive: stack panels on small screens */
 @media (max-width: 640px) {
   .footer-panels { grid-template-columns: 1fr; }

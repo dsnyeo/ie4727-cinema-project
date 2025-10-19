@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,10 +31,21 @@
         </ul>
       </nav>
       </div>
-
-      <a class="btn btn_ghost" href="#">LOGIN</a>
+      
+        <?php if (isset($_SESSION['sess_user'])): ?>
+          <span class="welcome_text">
+            👋 Welcome, 
+            <strong>
+              <?= htmlspecialchars($_SESSION['sess_user']) ?>
+            </strong>
+          </span>
+          <a class="btn btn_ghost" href="logout.php">LOGOUT</a>
+        <?php else: ?>
+          <a class="btn btn_ghost" href="login-main.php">LOGIN</a>
+        <?php endif; ?>
+      </div>
     </div>
-    </div>
+    
   </header>
 
   <main>
