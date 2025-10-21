@@ -13,7 +13,7 @@ CREATE TABLE movies (
   Title             VARCHAR(100) NOT NULL,              
   PosterPath        VARCHAR(255),                       
   Synopsis          TEXT NOT NULL,
-  Genre             VARCHAR(30) NOT NULL                  
+  Genre             VARCHAR(30) NOT NULL,                  
   TicketPrice       FLOAT NOT NULL,              
   Rating            VARCHAR(10)  NOT NULL,              
   ReleaseDate       DATE,
