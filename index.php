@@ -73,7 +73,7 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
         <div id="main_nav">
           <nav>
             <ul>
-              <li><a href="#">MOVIES</a></li>
+              <li><a href="movies.php">MOVIES</a></li>
               <li><a href="#">BOOKINGS</a></li>
               <li><a href="#">PROMOTIONS</a></li>
             </ul>
@@ -114,7 +114,7 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
                       <li>Rating: <?= e($m['rating']) ?></li>
                       <li>Release: <?= e($m['release_date']) ?></li>
                     </ul>
-                    <a class="btn btn_outline" href="movie.php?id=<?= urlencode($m['movie_id']) ?>">BUY TICKETS</a>
+                    <a class="btn btn_outline" href="moviedetails.php?id=<?= urlencode($m['movie_id']) ?>">BUY TICKETS</a>
                   </div>
                 </div>
               </article>
@@ -143,7 +143,7 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
                       <li>Rating: <?= e($m['rating']) ?></li>
                       <li>Release: <?= e($m['release_date']) ?></li>
                     </ul>
-                    <a class="btn btn_outline" href="movie.php?id=<?= urlencode($m['movie_id']) ?>">VIEW DETAILS</a>
+                    <a class="btn btn_outline" href="moviedetails.php?id=<?= urlencode($m['movie_id']) ?>">VIEW DETAILS</a>
                   </div>
                 </div>
               </article>
@@ -154,14 +154,76 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
     </section>
   </main>
 
-  <footer class="site_footer">
-    <div class="container footer_links">
-      <a href="#">HOME</a>
-      <a href="#">CONTACT US</a>
-      <a href="#">JOBS AT &quot;CINEMA NAME&quot;</a>
+  <!-- Footer -->
+<footer class="site_footer">
+  <div class="container footer_links">
+    <a href="index.php">HOME</a>
+    <a href="#">CONTACT US</a>
+    <a href="#">JOBS AT &quot;CINEMA NAME&quot;</a>
+  </div>
+
+  <!-- thin line across the container -->
+  <div class="container">
+    <hr class="footer_divider" />
+  </div>
+
+  <!-- two panels: left = connect, right = payment -->
+  <div class="container footer_panels">
+    <div class="footer_panel left">
+      <div class="panel_title">CONNECT WITH US</div>
+<ul class="icon_list" aria-label="Social links">
+  <li>
+    <a href="https://www.facebook.com/" class="icon_btn">
+      <!-- Facebook / Meta-style "f" -->
+      <img src="./images/fb.svg" alt="Facebook" >
+    </a>
+  </li>
+  <li>
+    <a href="https://x.com/?lang=en" class="icon_btn" aria-label="Twitter / X">
+      <!-- Twitter bird -->
+      <img src="./images/x.svg" alt="Twitter | X">
+    </a>
+  </li>
+  <li>
+    <a href="https://www.instagram.com/" class="icon_btn" aria-label="Instagram">
+      <!-- Instagram camera -->
+      <img src="./images/instagram.svg" alt="Instagram">
+    </a>
+  </li>
+  <li>
+    <a href="https://www.tiktok.com/en/" class="icon_btn" aria-label="TikTok">
+      <!-- TikTok note -->
+      <img src="./images/tiktok.svg" alt="TikTok">
+    </a>
+  </li>
+</ul>
     </div>
-    <div class="container"><hr class="footer_divider" /></div>
-    <small style="display:block;text-align:center;">© 2025 Cinema Name</small>
-  </footer>
+
+    <div class="footer_panel right">
+      <div class="panel_title">SUPPORTED PAYMENT</div>
+<ul class="icon_list" aria-label="Payment">
+  <li>
+    <a href="#" class="icon_btn">
+      <!-- Facebook / Meta-style "f" -->
+      <img src="./images/visa.svg" alt="visa" >
+    </a>
+  </li>
+  <li>
+    <a href="#" class="icon_btn" aria-label="mastercard">
+      <!-- Twitter bird -->
+      <img src="./images/mastercard.svg" alt="mastercard">
+    </a>
+  </li>
+  <li>
+    <a href="#" class="icon_btn" aria-label="cash">
+      <!-- Instagram camera -->
+      <img src="./images/cash.svg" alt="cash">
+    </a>
+  </li>
+</ul>
+    <small>Credit/Debit Cards and Cash are welcomed</small>
+    </div>
+  </div>
+</footer>
 </body>
 </html>

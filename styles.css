@@ -427,8 +427,219 @@ body {
       text-decoration: underline;
     }
 
+/* ===== MOVIES PAGE ===== */
+/* center the date/day stepper bar */
+.page_headbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;   /* <-- centers the whole bar */
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.page_headbar .day_tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;   /* <-- centers the row of day buttons */
+}
+
+/* grid remains same */
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin-inline: auto;
+}
+@media (max-width:900px){ .movies-grid{ grid-template-columns:1fr; } }
+
+/* dark themed movie card */
+.movie_card {
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 16px;
+  background: #000;           /* black background */
+  color: #fff;                /* white text */
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  transition: transform .2s ease;
+}
+.movie_card:hover { transform: scale(1.02); }
+
+@media (max-width:540px){ .movie_card{ grid-template-columns:1fr; } }
+
+/* poster */
+.movie_card .poster_box {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #111;
+}
+.movie_card .poster_box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* text inside card */
+.movie_info, .movie_card h3, .movie_card .movie_meta {
+  color: #fff;
+}
+.movie_card h3 { margin: 0 0 6px 0; line-height: 1.2; }
+.movie_meta { font-size: .95rem; margin: 4px 0; }
+
+/* timing buttons on dark background */
+.movie_times { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+.btn.btn-outline {
+  border: 1px solid #fff;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background .2s;
+}
+.btn.btn-outline:hover {
+  background: #fff;
+  color: #000;
+}
+
+
 /* Responsive: stack panels on small screens */
 @media (max-width: 640px) {
   .footer-panels { grid-template-columns: 1fr; }
   .footer-panel.right { align-items: flex-start; }
+}
+
+/* ===== Movie Details ===== */
+.details_titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.movie_title {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: .02em;
+  color: #fff;
+}
+
+.trailer_btn { white-space: nowrap; }
+
+.details_layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 18px;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 16px;
+  background: #000;          /* black background */
+  color: #fff;               /* white text for everything inside */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+}
+
+@media (max-width: 820px){
+  .details_layout { grid-template-columns: 1fr; }
+}
+
+.poster_lg {
+  width: 100%;
+  height: 360px;
+  background: #111;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+.poster_lg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.details_right { display: flex; flex-direction: column; gap: 12px; }
+
+/* --- facts box --- */
+.facts_box {
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 12px;
+  background: #111;
+}
+.facts_row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed #333;
+}
+.facts_row:last-child { border-bottom: none; }
+.facts_label {
+  font-weight: 600;
+  letter-spacing: .03em;
+  color: #bbb;
+}
+.facts_val {
+  color: #fff;
+}
+
+/* --- synopsis box --- */
+.synopsis_box {
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 12px;
+  background: #111;
+  color: #eee;
+}
+.synopsis_box h3 {
+  margin: 0 0 6px 0;
+  font-size: 16px;
+  letter-spacing: .04em;
+  color: #fff;
+}
+.synopsis_box p {
+  margin: 0;
+  line-height: 1.6;
+  color: #ccc;
+}
+
+.details_actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+/* --- buttons (light on dark) --- */
+.btn {
+  display: inline-block;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+
+.btn-outline {
+  border: 1px solid #fff;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+.btn-outline:hover {
+  background: #fff;
+  color: #000;
+}
+
+.btn-primary {
+  background: #000;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 10px;
+}
+.btn-primary:hover {
+  filter: brightness(0.9);
 }
