@@ -46,7 +46,7 @@
       <button type="submit" class="btn" name="login" id="login">LOGIN</button>
     </form>
 
-    <p>Don’t have an account? <a href="#">Register here</a></p>
+    <p>Don’t have an account? <a href="register-main.php">Register here</a></p>
   </div>
 
 

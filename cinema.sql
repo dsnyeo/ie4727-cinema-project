@@ -30,3 +30,19 @@ CREATE TABLE screentime (
   PRIMARY KEY (hall_code, timeslot),
   CONSTRAINT fk_movie FOREIGN KEY (movie_code) REFERENCES movies(MovieCode)
 );
+
+CREATE TABLE tickets (
+  TicketID INT AUTO_INCREMENT PRIMARY KEY,
+  HallID VARCHAR(10) NOT NULL,
+  ShowDate DATE NOT NULL,
+  TimeSlot TIME NOT NULL,
+  SeatCode VARCHAR(10) NOT NULL,
+  MovieCode VARCHAR(20),
+  UserID INT UNSIGNED,
+  BookingTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY unique_seat (HallID, ShowDate, TimeSlot, SeatCode),
+  CONSTRAINT fk_ticket_user
+    FOREIGN KEY (UserID) REFERENCES users(UserID),
+  CONSTRAINT fk_ticket_movie
+    FOREIGN KEY (MovieCode) REFERENCES movies(MovieCode)
+);

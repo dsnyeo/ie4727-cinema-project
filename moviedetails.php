@@ -29,9 +29,6 @@ $stmt->close();
 
 if (!$movie) die("Movie not found.");
 
-/* 2) Fetch showtimes for this movie
-      - GROUP BY timeslot so you get unique times (e.g., 09:30 and 17:00)
-      - halls: optional list of halls that run this time */
 $sqlSlots = "SELECT 
     TIME_FORMAT(timeslot,'%H:%i:%s') AS time_24,
     TIME_FORMAT(timeslot,'%h:%i %p') AS time_12,
@@ -49,8 +46,6 @@ $res = $st->get_result();
 $slots = [];
 while ($r = $res->fetch_assoc()) $slots[] = $r;
 $st->close();
-
-/* -- from here render your details page + the timeslot picker form -- */
 ?>
 
 <!DOCTYPE html>
@@ -121,7 +116,7 @@ $st->close();
 
       <!-- Right column -->
       <div class="details_right">
-        <!-- facts box -->
+
         <section class="facts_box">
           <div class="facts_row"><span class="facts_label">RELEASE DATE</span><span class="facts_val"><?= e($movie['release_date']) ?></span></div>
           <div class="facts_row"><span class="facts_label">LANGUAGE</span><span class="facts_val"><?= e($movie['language']) ?></span></div>
@@ -130,7 +125,6 @@ $st->close();
           <div class="facts_row"><span class="facts_label">RATING</span><span class="facts_val"><?= e($movie['rating']) ?></span></div>
         </section>
 
-        <!-- synopsis box -->
         <section class="synopsis_box">
           <h3>SYNOPSIS</h3>
           <p><?= nl2br(e($movie['synopsis'])) ?></p>
@@ -162,57 +156,54 @@ $hallList = array_keys($hallSet);
     </div>
 
     <!-- Form posts to your booking page -->
-    <form method="post" action="booking.php" class="ts-form">
+    <form method="post" action="proceed2seats.php" class="ts-form">
+      <!-- Required: pass movie id & title forward -->
       <input type="hidden" name="movie_id" value="<?= e($movieId) ?>">
+      <input type="hidden" name="movie_title" value="<?= e($movie['title']) ?>">
 
-      <div class="ts-pills">
-        <?php foreach ($slots as $i => $s): 
-              // radio id must be unique
-              $rid = 'ts_' . $i;
-        ?>
-          <input type="radio"
-                 name="timeslot"
-                 id="<?= e($rid) ?>"
-                 value="<?= e($s['time_24']) ?>"
-                 <?= $i === 0 ? 'checked' : '' ?> required>
-          <label for="<?= e($rid) ?>"><?= e($s['time_12']) ?></label>
-        <?php endforeach; ?>
+      <!-- Date -->
+      <div class="ts-row" style="margin:.75rem 0;">
+        <label for="show_date" style="margin-right:.5rem;font-weight:600;">Date:</label>
+        <input type="date" id="show_date" name="show_date"
+              value="<?= e(date('Y-m-d')) ?>" required>
       </div>
 
-      <!-- (Optional) let user pick preferred hall if the same movie plays in multiple halls at the same time)
-           If you want hall selection too, uncomment:
-
-      <div style="margin-top:10px;">
-        <label for="hall">Hall:</label>
-        <select id="hall" name="hall_code">
+      <!-- Hall -->
+      <div class="ts-row" style="margin:.75rem 0;">
+        <label for="hall_id" style="margin-right:.5rem;font-weight:600;">Hall:</label>
+        <select id="hall_id" name="hall_id" required>
+          <option value="" disabled selected>Choose a hall</option>
           <?php foreach ($hallList as $h): ?>
             <option value="<?= e($h) ?>"><?= e($h) ?></option>
           <?php endforeach; ?>
         </select>
       </div>
-      -->
 
-      <div style="margin-top:12px;">
-        
+      <!-- Timeslots as radio pills -->
+      <div class="ts-pills" style="display:flex;gap:.5rem;flex-wrap:wrap;margin:.75rem 0;">
+        <?php foreach ($slots as $i => $s): $rid = 'ts_' . $i; ?>
+          <input type="radio"
+                name="timeslot"
+                id="<?= e($rid) ?>"
+                value="<?= e($s['time_24']) ?>"
+                <?= $i === 0 ? 'checked' : '' ?> required>
+          <label for="<?= e($rid) ?>" class="pill"><?= e($s['time_12']) ?></label>
+        <?php endforeach; ?>
+      </div>
+
+      <div class="details_actions">
+        <a class="btn btn-outline" href="index.php">Back to Home</a>
+        <button type="submit" class="btn btn-primary">Continue</button>
       </div>
     </form>
   <?php endif; ?>
 </section>
         
-
         <!-- actions -->
-        <div class="details_actions">
-          <a class="btn btn-outline" href="index.php">Back to Home</a>
-          <button type="submit" class="btn btn-primary">Continue</button>
-          <!-- Example booking entry; you can add ?time= later -->
-        </div>
+        
       </div>
     </div>
-
   </div>
-
-
-
 </main>
 
 <footer class="site_footer">

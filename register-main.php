@@ -2,13 +2,6 @@
 session_start();
 require_once __DIR__ . '/dbconnect.php';
 
-if (!isset($conn) || !($conn instanceof mysqli)) {
-  if (isset($dbcnx) && $dbcnx instanceof mysqli) { $conn = $dbcnx; }
-}
-if (!isset($conn) || !($conn instanceof mysqli)) {
-  die('Error: Database connection ($conn) is not initialized by dbconnect.php');
-}
-
 $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -42,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   if (!$errors) {
-    $dup = $conn->prepare("SELECT 1 FROM users WHERE Username = ? OR Email = ? LIMIT 1");
+    $dup = $dbcnx->prepare("SELECT 1 FROM users WHERE Username = ? OR Email = ? LIMIT 1");
     $dup->bind_param('ss', $username, $email);
     $dup->execute();
     $dup->store_result();
@@ -53,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 
   if (!$errors) {
-    $ins = $conn->prepare("
+    $ins = $dbcnx->prepare("
       INSERT INTO users (FirstName, LastName, Username, Email, UserPassword, isAdmin)
       VALUES (?, ?, ?, ?, ?, 0)
     ");
