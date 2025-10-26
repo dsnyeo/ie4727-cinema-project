@@ -4,32 +4,83 @@ include "dbconnect.php";
 
 function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
 
+// ---------------------------------------------------
+// 1. Base values (from when user first picked a show)
+// ---------------------------------------------------
+
 if (empty($_SESSION['booking'])) {
-  header("Location: index.php");
-  exit;
+    header("Location: index.php");
+    exit;
 }
 
+// pull what we stored earlier in the booking session
 $b = $_SESSION['booking'];
 
-$movieId    = $b['movie_id'];
-$movieTitle = $b['movie_title'];
-$hallId     = $b['hall_id'];
-$showDate   = $b['show_date'];
-$timeslot   = $b['timeslot'];     // "HH:MM:SS"
-$timeslot12 = $b['timeslot_12'];
+$movieId     = $b['movie_id']     ?? '';
+$movieTitle  = $b['movie_title']  ?? '';
+$hallId      = $b['hall_id']      ?? '';
+$showDate    = $b['show_date']    ?? '';
+$timeslot    = $b['timeslot']     ?? '';     // "HH:MM:SS" for DB
+$timeslot12  = $b['timeslot_12']  ?? '';     // "7:30 PM"
 
-// New layout definition
+// seat map layout
 $rows       = ['A','B','C','D','E'];
-$colsLeft   = ['1','2','3','4'];      // seats close together (block 1)
-$colsRight  = ['5','6','7','8'];      // seats close together (block 2)
+$colsLeft   = ['1','2','3','4'];  // seats block 1
+$colsRight  = ['5','6','7','8'];  // seats block 2
 
-// Get booked seats for this hall/date/time (same as before)
+// ---------------------------------------------------
+// 2. Check if we're editing an existing cart item
+//    (user clicked "Edit seats" in cart.php)
+// ---------------------------------------------------
+
+$isEditMode        = false;
+$editingIndex      = null;
+$preSelectedSeats  = [];  // seats we want to pre-highlight for user
+
+if (!empty($_GET['edit']) && !empty($_SESSION['edit_target'])) {
+    $isEditMode = true;
+
+    $editingIndex      = $_SESSION['edit_target']['cart_index']  ?? null;
+    $preSelectedSeats  = $_SESSION['edit_target']['prev_seats']  ?? [];
+
+    // OVERWRITE the show details with the exact cart item details,
+    // so we show them the correct hall/date/timeslot they are editing
+    if (!empty($_SESSION['edit_target']['hall_id'])) {
+        $hallId = $_SESSION['edit_target']['hall_id'];
+    }
+    if (!empty($_SESSION['edit_target']['show_date'])) {
+        $showDate = $_SESSION['edit_target']['show_date'];
+    }
+    if (!empty($_SESSION['edit_target']['timeslot'])) {
+        // NOTE: we added 'timeslot' (24h format) into edit_target in edit_item.php
+        $timeslot = $_SESSION['edit_target']['timeslot'];
+    }
+    if (!empty($_SESSION['edit_target']['timeslot12'])) {
+        $timeslot12 = $_SESSION['edit_target']['timeslot12'];
+    }
+    if (!empty($_SESSION['edit_target']['movie_id'])) {
+        $movieId = $_SESSION['edit_target']['movie_id'];
+    }
+
+    // We didn't store movie_title in edit_target, but we *can* pull it from cart
+    if ($editingIndex !== null &&
+        isset($_SESSION['cart'][$editingIndex]['movie_title'])) {
+        $movieTitle = $_SESSION['cart'][$editingIndex]['movie_title'];
+    }
+}
+
+// ---------------------------------------------------
+// 3. Query all seats already booked for THIS hall/date/timeslot
+// ---------------------------------------------------
+
 $bookedSeats = [];
+
 $sqlBooked = "SELECT SeatCode 
               FROM tickets 
               WHERE HallID = ?
                 AND ShowDate = ?
                 AND TimeSlot = ?";
+
 if ($stmt = $dbcnx->prepare($sqlBooked)) {
     $stmt->bind_param("sss", $hallId, $showDate, $timeslot);
     $stmt->execute();
@@ -39,6 +90,16 @@ if ($stmt = $dbcnx->prepare($sqlBooked)) {
     }
     $stmt->close();
 }
+
+// ---------------------------------------------------
+// 4. Now you have ready-to-use variables for the HTML below:
+//    $movieId, $movieTitle, $hallId, $showDate, $timeslot, $timeslot12
+//    $rows, $colsLeft, $colsRight
+//    $bookedSeats (from DB)
+//    $isEditMode (true/false)
+//    $preSelectedSeats (user's old seats to auto-select in UI)
+//    $editingIndex (which cart item is being edited)
+// ---------------------------------------------------
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,212 +109,7 @@ if ($stmt = $dbcnx->prepare($sqlBooked)) {
   <title>Seat Selection</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-   /* Center page container stays same */
-.page-container{
-  max-width:1000px;
-  margin:0 auto;
-  padding:1.5rem;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-  color:#0f172a;
-}
-h1{
-  margin:0 0 1rem;
-  font-size:1.5rem;
-  font-weight:600;
-  color:#0f172a;
-}
-
-/* Summary header boxes */
-.seat-header{
-  display:flex;
-  gap:1rem;
-  flex-wrap:wrap;
-  margin:1.5rem 0;
-  align-items:flex-start;
-  justify-content:flex-start;
-}
-.summary-box{
-  flex:1 1 260px;
-  border:1px solid #e2e8f0;
-  padding:1rem 1.25rem;
-  border-radius:12px;
-  background:#fafafa;
-}
-.summary-box h4{
-  margin:0 0 .5rem;
-  font-size:0.8rem;
-  font-weight:600;
-  letter-spacing:.05em;
-  color:#475569;
-}
-.movie-title{
-  font-size:1.25rem;
-  font-weight:700;
-  color:#0f172a;
-}
-.movie-code{
-  margin-top:.25rem;
-  color:#64748b;
-  font-size:0.9rem;
-}
-.session-meta{
-  font-size:1rem;
-  color:#0f172a;
-  line-height:1.4;
-}
-.session-meta span{
-  display:block;
-  margin-bottom:.25rem;
-}
-.btn-viewplan{
-  appearance:none;
-  border:0;
-  cursor:pointer;
-  background:#0ea5e9;
-  color:#fff;
-  font-weight:600;
-  font-size:0.9rem;
-  line-height:1.2;
-  padding:.6rem .9rem;
-  border-radius:8px;
-  white-space:nowrap;
-  margin-top:.75rem;
-}
-
-/* Seat plan wrapper now sits BELOW both summary boxes */
-.seat-plan-wrapper{
-  border:1px solid #e2e8f0;
-  border-radius:12px;
-  background:#fff;
-  padding:1rem 1.25rem 1.5rem;
-  max-width:560px;
-  margin:2rem auto 0 auto; /* <-- center it under everything */
-  display:none;            /* hidden by default, toggled with JS */
-  text-align:center;
-}
-
-.plan-header{
-  font-size:1rem;
-  font-weight:600;
-  color:#0f172a;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:1rem;
-}
-.close-plan-btn{
-  appearance:none;
-  border:0;
-  background:#e2e8f0;
-  color:#0f172a;
-  font-size:0.8rem;
-  font-weight:600;
-  border-radius:6px;
-  padding:.3rem .5rem;
-  cursor:pointer;
-  line-height:1.2;
-}
-
-.screen-label{
-  text-align:center;
-  font-size:0.8rem;
-  color:#475569;
-  letter-spacing:.1em;
-  font-weight:600;
-  border-bottom:2px solid #94a3b8;
-  padding-bottom:.25rem;
-  margin-bottom:1rem;
-}
-
-/* Seating grid */
-.seats-grid{
-  display:flex;
-  flex-direction:column;
-  row-gap:0.9rem; /* vertical space between rows */
-  align-items:center;
-}
-
-/* Each row now has 2 blocks of seats */
-.seat-row{
-  display:flex;
-  align-items:center;
-  column-gap:3rem; /* <-- aisle gap between the left block and right block */
-}
-
-/* Each block = seats close together */
-.block{
-  display:flex;
-  column-gap:0.5rem; /* seats inside block are near each other */
-}
-
-/* Seat style */
-.seat{
-  width:44px;
-  height:44px;
-  border-radius:8px;
-  border:2px solid #475569;
-  background:#fff;
-  font-size:0.8rem;
-  font-weight:600;
-  color:#0f172a;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  line-height:1;
-  user-select:none;
-}
-
-.seat.booked{
-  background:#94a3b8;
-  border-color:#94a3b8;
-  color:#fff;
-  cursor:not-allowed;
-  text-decoration:line-through;
-}
-
-.seat.selected{
-  background:#0ea5e9;
-  border-color:#0ea5e9;
-  color:#fff;
-}
-
-/* make booked seats not clickable at all */
-.seat.booked{
-  background:#94a3b8;
-  border-color:#94a3b8;
-  color:#fff;
-  cursor:not-allowed;
-  text-decoration:line-through;
-  pointer-events:none;
-}
-
-.legend{
-  margin-top:1rem;
-  font-size:0.8rem;
-  color:#475569;
-  display:flex;
-  flex-wrap:wrap;
-  gap:1rem;
-  justify-content:center;
-}
-.legend-item{
-  display:flex;
-  align-items:center;
-  gap:.4rem;
-}
-.legend-swatch{
-  width:16px;
-  height:16px;
-  border-radius:4px;
-  border:2px solid #475569;
-  background:#fff;
-}
-.legend-swatch.booked{
-  background:#94a3b8;
-  border-color:#94a3b8;
-}
-
+   
   </style>
 </head>
 <body>
@@ -294,54 +150,75 @@ h1{
   <div class="screen-label">SCREEN</div>
 
   <!-- form so we can submit selected seats to PHP -->
-  <form method="post" action="save_seats.php" style="text-align:center;">
+  <form method="post" action="proceed2cart.php" style="text-align:center;">
 
     <div class="seats-grid">
       <?php
-      foreach ($rows as $r) {
-        echo '<div class="seat-row">';
+foreach ($rows as $r) {
+    echo '<div class="seat-row">';
 
-        // LEFT BLOCK seats 1-4
-        echo '<div class="block">';
-        foreach ($colsLeft as $c) {
-          $code = $r.$c; // e.g. A1
-          $isBooked = in_array($code, $bookedSeats);
-          $classList = $isBooked ? 'seat booked' : 'seat';
-          $safeCode  = e($code);
+    // LEFT BLOCK seats 1-4
+    echo '<div class="block">';
+    foreach ($colsLeft as $c) {
+        $code = $r.$c; // e.g. "A1"
 
-          echo "<div class=\"$classList\" ";
-          echo "data-seat=\"$safeCode\" ";
-          if ($isBooked) {
-            echo "title=\"$safeCode is taken\">";
-          } else {
-            echo "title=\"$safeCode is available\" onclick=\"toggleSeat(this)\">";
-          }
-          echo "$safeCode</div>";
+        $isBooked = in_array($code, $bookedSeats);
+        $wasMine  = in_array($code, $preSelectedSeats);
+
+        // build CSS classes
+        $classList = 'seat';
+        if ($isBooked) {
+            $classList .= ' booked';
+        } else if ($wasMine) {
+            $classList .= ' selected';
         }
-        echo '</div>';
 
-        // RIGHT BLOCK seats 5-8
-        echo '<div class="block">';
-        foreach ($colsRight as $c) {
-          $code = $r.$c; // e.g. A5
-          $isBooked = in_array($code, $bookedSeats);
-          $classList = $isBooked ? 'seat booked' : 'seat';
-          $safeCode  = e($code);
+        $safeCode = e($code);
 
-          echo "<div class=\"$classList\" ";
-          echo "data-seat=\"$safeCode\" ";
-          if ($isBooked) {
+        echo "<div class=\"$classList\" data-seat=\"$safeCode\" ";
+
+        if ($isBooked) {
             echo "title=\"$safeCode is taken\">";
-          } else {
+        } else {
             echo "title=\"$safeCode is available\" onclick=\"toggleSeat(this)\">";
-          }
-          echo "$safeCode</div>";
         }
-        echo '</div>';
 
-        echo '</div>'; // .seat-row
-      }
-      ?>
+        echo $safeCode . "</div>";
+    }
+    echo '</div>';
+
+    // RIGHT BLOCK seats 5-8
+    echo '<div class="block">';
+    foreach ($colsRight as $c) {
+        $code = $r.$c;
+
+        $isBooked = in_array($code, $bookedSeats);
+        $wasMine  = in_array($code, $preSelectedSeats);
+
+        $classList = 'seat';
+        if ($isBooked) {
+            $classList .= ' booked';
+        } else if ($wasMine) {
+            $classList .= ' selected';
+        }
+
+        $safeCode = e($code);
+
+        echo "<div class=\"$classList\" data-seat=\"$safeCode\" ";
+
+        if ($isBooked) {
+            echo "title=\"$safeCode is taken\">";
+        } else {
+            echo "title=\"$safeCode is available\" onclick=\"toggleSeat(this)\">";
+        }
+
+        echo $safeCode . "</div>";
+    }
+    echo '</div>';
+
+    echo '</div>'; // .seat-row
+}
+?>
     </div>
 
     <div class="legend">
@@ -391,34 +268,24 @@ h1{
     </button>
   </form>
 </div>
-        <div id="selectionSummary" style="margin-top:1rem; font-size:0.9rem; color:#0f172a; font-weight:500; text-align:center;">
-            No seat selected
-        </div>
     <p style="margin-top:2rem; color:#64748b; text-align:center;">
       (Next step: make seats clickable and store the chosen seat(s) before payment.)
     </p>
   </main>
 </body>
   <script>
-     // track selected seats in memory in the browser
-  const selectedSeats = new Set();
-
-  // called when user clicks on a seat div
-  function toggleSeat(seatDiv) {
-    const seatCode = seatDiv.getAttribute("data-seat");
-
-    if (seatDiv.classList.contains("selected")) {
-      // unselect
-      seatDiv.classList.remove("selected");
-      selectedSeats.delete(seatCode);
-    } else {
-      // select
-      seatDiv.classList.add("selected");
-      selectedSeats.add(seatCode);
-    }
-
-    updateSelectionSummary();
-  }
+ const selectedSeats = new Set([
+    <?php
+      // echo '"A1","B2","B3",' style
+      if (!empty($preSelectedSeats)) {
+          $out = [];
+          foreach ($preSelectedSeats as $ps) {
+              $out[] = '"' . htmlspecialchars($ps, ENT_QUOTES, 'UTF-8') . '"';
+          }
+          echo implode(",", $out);
+      }
+    ?>
+  ]);
 
   function updateSelectionSummary() {
     const summaryBox = document.getElementById("selectionSummary");
@@ -432,14 +299,34 @@ h1{
     } else {
       const seatList = Array.from(selectedSeats).join(", ");
       summaryBox.textContent = "Selected seat(s): " + seatList;
-      hiddenInput.value = Array.from(selectedSeats).join(","); // "A1,B2,B3"
+      hiddenInput.value = Array.from(selectedSeats).join(",");
     }
   }
 
-  function togglePlan(show){
+  function toggleSeat(seatDiv) {
+    const seatCode = seatDiv.getAttribute("data-seat");
+
+    if (seatDiv.classList.contains("selected")) {
+      seatDiv.classList.remove("selected");
+      selectedSeats.delete(seatCode);
+    } else {
+      // don't allow booking already-booked seats
+      if (seatDiv.classList.contains("booked")) {
+        return;
+      }
+      seatDiv.classList.add("selected");
+      selectedSeats.add(seatCode);
+    }
+
+    updateSelectionSummary();
+  }
+    function togglePlan(show){
     const box = document.getElementById('seatPlanBox');
     if (!box) return;
     box.style.display = show ? 'block' : 'none';
   }
+
+  // run once on load so the summary matches the preloaded seats
+  updateSelectionSummary();
   </script>
 </html>
