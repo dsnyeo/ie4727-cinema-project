@@ -850,3 +850,17 @@ h1{
   background:#94a3b8;
   border-color:#94a3b8;
 }
+
+.error_text{
+  display:block; margin-top:6px;
+  font-size:.9rem; color:#ff6b6b;
+}
+
+.is-invalid{
+  border-color:#ff6b6b !important;
+  outline: none;
+}
+
+.is-valid{
+  border-color:#3ad29f !important;
+}
