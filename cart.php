@@ -21,10 +21,20 @@ $PRICE_PER_SEAT = 8.00;
 
 // compute grand total safely
 $grandTotalRaw = 0;
+$displayItemCount = 0;
+
 foreach ($cartItems as $ci) {
     $seatList = (isset($ci['seats']) && is_array($ci['seats'])) ? $ci['seats'] : [];
-    $grandTotalRaw += count($seatList) * $PRICE_PER_SEAT;
+    $qty = count($seatList);
+
+    if ($qty === 0) {
+        continue; // ignore empty ghost entries
+    }
+
+    $grandTotalRaw += $qty * $PRICE_PER_SEAT;
+    $displayItemCount++;
 }
+
 $grandTotalFmt = number_format($grandTotalRaw, 2);
 ?>
 <!DOCTYPE html>
@@ -269,26 +279,30 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
     <div class="cart-items-list">
       <?php foreach ($cartItems as $index => $item):
 
-          // safe fallbacks – so missing keys won't explode
-          $movie_id    = $item['movie_id']    ?? '';
-          $movie_title = $item['movie_title'] ?? '';
-          $hall_id     = $item['hall_id']     ?? '';
-          $show_date   = $item['show_date']   ?? '';
-          $timeslot12  = $item['timeslot12']  ?? '';
+      // seats safety
+      $seatsArray = (isset($item['seats']) && is_array($item['seats']))
+                    ? $item['seats']
+                    : [];
 
-          // seats safety
-          $seatsArray = (isset($item['seats']) && is_array($item['seats']))
-                        ? $item['seats']
-                        : [];
+      $qty = count($seatsArray);
 
-          $qty = count($seatsArray);
+      // 🚫 skip completely if no seats selected
+      if ($qty === 0) {
+          continue;
+      }
 
-          $itemSubtotalRaw = $qty * $PRICE_PER_SEAT;
-          $itemSubtotalFmt = number_format($itemSubtotalRaw, 2);
+      // now pull other fields only for non-empty items
+      $movie_id    = $item['movie_id']    ?? '';
+      $movie_title = $item['movie_title'] ?? '';
+      $hall_id     = $item['hall_id']     ?? '';
+      $show_date   = $item['show_date']   ?? '';
+      $timeslot12  = $item['timeslot12']  ?? '';
 
-          // We can still send simple hidden inputs (no JSON) when checking out/editing
-          $seatCSV = implode(",", $seatsArray);
-      ?>
+      $itemSubtotalRaw = $qty * $PRICE_PER_SEAT;
+      $itemSubtotalFmt = number_format($itemSubtotalRaw, 2);
+
+      $seatCSV = implode(",", $seatsArray);
+  ?>
       <div class="cart-item">
 
         <!-- movie + session row -->

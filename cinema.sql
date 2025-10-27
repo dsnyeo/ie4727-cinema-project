@@ -33,6 +33,7 @@ CREATE TABLE screentime (
 
 CREATE TABLE tickets (
   TicketID INT AUTO_INCREMENT PRIMARY KEY,
+  OrderID  INT NOT NULL,
   HallID VARCHAR(10) NOT NULL,
   ShowDate DATE NOT NULL,
   TimeSlot TIME NOT NULL,
@@ -44,5 +45,27 @@ CREATE TABLE tickets (
   CONSTRAINT fk_ticket_user
     FOREIGN KEY (UserID) REFERENCES users(UserID),
   CONSTRAINT fk_ticket_movie
-    FOREIGN KEY (MovieCode) REFERENCES movies(MovieCode)
+    FOREIGN KEY (MovieCode) REFERENCES movies(MovieCode),
+  CONSTRAINT fk_ticket_order
+    FOREIGN KEY (OrderID) REFERENCES bookings(OrderID)
+      ON DELETE CASCADE
 );
+
+
+CREATE TABLE bookings (
+  OrderID        INT AUTO_INCREMENT PRIMARY KEY,
+  CustName       VARCHAR(100) NOT NULL,
+  CustEmail      VARCHAR(100) NOT NULL,
+  CustPhone      VARCHAR(30)  NOT NULL,
+  PaymentMethod  ENUM('cash','card') NOT NULL,
+  PaidAmount     DECIMAL(10,2) NOT NULL,  
+  UserID         INT UNSIGNED NULL,
+  CreatedAt      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  CONSTRAINT fk_booking_user
+    FOREIGN KEY (UserID)
+    REFERENCES users(UserID)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE
+);
+
