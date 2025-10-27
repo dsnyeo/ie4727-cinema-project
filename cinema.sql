@@ -23,6 +23,17 @@ CREATE TABLE movies (
   Language          VARCHAR(30)  NOT NULL DEFAULT 'English'
 );
 
+CREATE TABLE IF NOT EXISTS jobs (
+  id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name        VARCHAR(100)  NOT NULL,
+  email       VARCHAR(255)  NOT NULL,
+  start_date  DATE          NOT NULL,
+  birthday    DATE          NOT NULL,
+  experience  TEXT          NOT NULL,
+  UNIQUE INDEX idx_jobs_email (email),
+  INDEX idx_jobs_start_date (start_date)
+)
+
 CREATE TABLE screentime (
   hall_code   VARCHAR(4) NOT NULL,          
   timeslot    TIME NOT NULL,                
