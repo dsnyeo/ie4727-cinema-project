@@ -1,4 +1,4 @@
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     UserID INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     FirstName CHAR(40),
     LastName CHAR(40),
@@ -8,7 +8,7 @@ CREATE TABLE users (
     isAdmin BOOLEAN NOT NULL
 );
 
-CREATE TABLE movies (
+CREATE TABLE IF NOT EXISTS movies (
   MovieCode         VARCHAR(20)  NOT NULL PRIMARY KEY,  
   Title             VARCHAR(100) NOT NULL,              
   PosterPath        VARCHAR(255),                       
@@ -42,7 +42,7 @@ CREATE TABLE screentime (
   CONSTRAINT fk_movie FOREIGN KEY (movie_code) REFERENCES movies(MovieCode)
 );
 
-CREATE TABLE tickets (
+CREATE TABLE IF NOT EXISTS tickets (
   TicketID INT AUTO_INCREMENT PRIMARY KEY,
   OrderID  INT NOT NULL,
   HallID VARCHAR(10) NOT NULL,

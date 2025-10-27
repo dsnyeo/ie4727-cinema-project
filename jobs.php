@@ -320,4 +320,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     })();
   </script>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> c56bf65492922d409314ad213985181770d9a4e9
