@@ -73,9 +73,9 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
         <div id="main_nav">
           <nav>
             <ul>
-              <li><a href="movies.php">MOVIES</a></li>
-              <li><a href="#">BOOKINGS</a></li>
               <li><a href="#">PROMOTIONS</a></li>
+              <li><a href="#">BOOKINGS</a></li>
+              <li><a href="#">PROFILE</a></li>
             </ul>
           </nav>
         </div>
@@ -83,6 +83,9 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
         <div>
           <?php if (isset($_SESSION['sess_user'])): ?>
             <span class="welcome_text">
+              <a href="cart.php" style="text-decoration: none;">
+              🛒
+              </a>
               👋 Welcome, <strong><?= e($_SESSION['sess_user']) ?></strong>
             </span>
             <a class="btn btn_ghost" href="logout.php">LOGOUT</a>

@@ -268,9 +268,7 @@ foreach ($rows as $r) {
     </button>
   </form>
 </div>
-    <p style="margin-top:2rem; color:#64748b; text-align:center;">
-      (Next step: make seats clickable and store the chosen seat(s) before payment.)
-    </p>
+
   </main>
 </body>
   <script>

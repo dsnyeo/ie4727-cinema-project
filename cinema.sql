@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS jobs (
   INDEX idx_jobs_start_date (start_date)
 )
 
-CREATE TABLE screentime (
+CREATE TABLE IF NOT EXISTS screentime (
   hall_code   VARCHAR(4) NOT NULL,          
   timeslot    TIME NOT NULL,                
   movie_code  VARCHAR(32) NOT NULL,          
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS tickets (
 );
 
 
-CREATE TABLE bookings (
+CREATE TABLE IF NOT EXISTS bookings (
   OrderID        INT AUTO_INCREMENT PRIMARY KEY,
   CustName       VARCHAR(100) NOT NULL,
   CustEmail      VARCHAR(100) NOT NULL,
