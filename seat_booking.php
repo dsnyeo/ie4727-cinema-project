@@ -108,9 +108,6 @@ if ($stmt = $dbcnx->prepare($sqlBooked)) {
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Seat Selection</title>
   <link rel="stylesheet" href="styles.css" />
-  <style>
-   
-  </style>
 </head>
 <body>
   <main class="container">
@@ -133,18 +130,13 @@ if ($stmt = $dbcnx->prepare($sqlBooked)) {
           <span>🕒 <?= e($timeslot12) ?></span>
           <span>🏟️ Hall <?= e($hallId) ?></span>
         </div>
-
-        <button type="button" class="btn-viewplan" onclick="togglePlan(true)">
-          View seating plan
-        </button>
       </div>
     </div>
 
     <!-- Seat plan box now BELOW, centered -->
-    <div id="seatPlanBox" class="seat-plan-wrapper">
+    <div id="seatPlanBox" class="seat-plan-wrapper" style="display:block;">
   <div class="plan-header">
     <span>Seat Availability</span>
-    <button class="close-plan-btn" type="button" onclick="togglePlan(false)">Close</button>
   </div>
 
   <div class="screen-label">SCREEN</div>
@@ -271,60 +263,63 @@ foreach ($rows as $r) {
 
   </main>
 </body>
-  <script>
+<script>
  const selectedSeats = new Set([
     <?php
-      // echo '"A1","B2","B3",' style
       if (!empty($preSelectedSeats)) {
-          $out = [];
-          foreach ($preSelectedSeats as $ps) {
-              $out[] = '"' . htmlspecialchars($ps, ENT_QUOTES, 'UTF-8') . '"';
-          }
-          echo implode(",", $out);
+        $out = [];
+        foreach ($preSelectedSeats as $ps) {
+          $out[] = '"' . htmlspecialchars($ps, ENT_QUOTES, 'UTF-8') . '"';
+        }
+        echo implode(",", $out);
       }
     ?>
   ]);
 
+  function sortSeatCodes(arr) {
+    return arr.sort((a, b) => {
+      const ra = a.charAt(0), rb = b.charAt(0);
+      const na = parseInt(a.slice(1), 10), nb = parseInt(b.slice(1), 10);
+      return ra === rb ? (na - nb) : ra.localeCompare(rb);
+    });
+  }
+
   function updateSelectionSummary() {
     const summaryBox = document.getElementById("selectionSummary");
     const hiddenInput = document.getElementById("selectedSeatsInput");
-
     if (!summaryBox || !hiddenInput) return;
 
-    if (selectedSeats.size === 0) {
+    const sorted = sortSeatCodes(Array.from(selectedSeats));
+
+    if (sorted.length === 0) {
       summaryBox.textContent = "No seat selected";
       hiddenInput.value = "";
     } else {
-      const seatList = Array.from(selectedSeats).join(", ");
-      summaryBox.textContent = "Selected seat(s): " + seatList;
-      hiddenInput.value = Array.from(selectedSeats).join(",");
+      summaryBox.textContent = "Selected seat(s): " + sorted.join(", ");
+      hiddenInput.value = sorted.join(",");
     }
   }
 
   function toggleSeat(seatDiv) {
     const seatCode = seatDiv.getAttribute("data-seat");
-
     if (seatDiv.classList.contains("selected")) {
       seatDiv.classList.remove("selected");
       selectedSeats.delete(seatCode);
     } else {
-      // don't allow booking already-booked seats
-      if (seatDiv.classList.contains("booked")) {
-        return;
-      }
+      if (seatDiv.classList.contains("booked")) return;
       seatDiv.classList.add("selected");
       selectedSeats.add(seatCode);
     }
-
     updateSelectionSummary();
   }
-    function togglePlan(show){
+
+  function togglePlan(show){
     const box = document.getElementById('seatPlanBox');
     if (!box) return;
     box.style.display = show ? 'block' : 'none';
   }
 
-  // run once on load so the summary matches the preloaded seats
+  // keep the initial selection summary in sync (and sorted)
   updateSelectionSummary();
-  </script>
+</script>
 </html>

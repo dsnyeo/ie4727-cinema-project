@@ -725,7 +725,6 @@ h1{
   padding:1rem 1.25rem 1.5rem;
   max-width:560px;
   margin:2rem auto 0 auto; /* <-- center it under everything */
-  display:none;            /* hidden by default, toggled with JS */
   text-align:center;
 }
 

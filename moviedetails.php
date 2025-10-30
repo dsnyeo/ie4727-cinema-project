@@ -142,17 +142,18 @@ $st->close();
   <?php else: ?>
     <!-- Optional helper text (first two, or show halls) -->
     <?php
-      // Build a short descriptor like "H1 | H5" if you want to show halls next to the time
       $hallSet = [];
-foreach ($slots as $s) {
-  foreach (array_map('trim', explode(',', $s['halls'])) as $h) {
-    if ($h !== '') { $hallSet[$h] = true; }
-  }
-}
-$hallList = array_keys($hallSet);
+      foreach ($slots as $s) {
+        foreach (array_map('trim', explode(',', $s['halls'])) as $h) {
+          if ($h !== '') { $hallSet[$h] = true; }
+        }
+      }
+      $hallList   = array_keys($hallSet);
+      $singleHall = $hallList[0] ?? ''; // the only hall (or empty if none found)
     ?>
+
     <div class="ts-meta">
-      Available halls: <?= e(implode(' · ', $hallList)) ?>
+      Hall: <?= e($singleHall ?: 'TBC') ?>
     </div>
 
     <!-- Form posts to your booking page -->
@@ -167,17 +168,9 @@ $hallList = array_keys($hallSet);
         <input type="date" id="show_date" name="show_date"
               value="<?= e(date('Y-m-d')) ?>" required>
       </div>
+      
+      <input type="hidden" name="hall_id" value="<?= e($singleHall) ?>">
 
-      <!-- Hall -->
-      <div class="ts-row" style="margin:.75rem 0;">
-        <label for="hall_id" style="margin-right:.5rem;font-weight:600;">Hall:</label>
-        <select id="hall_id" name="hall_id" required>
-          <option value="" disabled selected>Choose a hall</option>
-          <?php foreach ($hallList as $h): ?>
-            <option value="<?= e($h) ?>"><?= e($h) ?></option>
-          <?php endforeach; ?>
-        </select>
-      </div>
 
       <!-- Timeslots as radio pills -->
       <div class="ts-pills" style="display:flex;gap:.5rem;flex-wrap:wrap;margin:.75rem 0;">
