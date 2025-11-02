@@ -1,3 +1,12 @@
+<?php
+session_start();
+$flash = $_SESSION['flash'] ?? null;
+if ($flash) {
+  $flash_safe = htmlspecialchars($flash, ENT_QUOTES, 'UTF-8');
+  unset($_SESSION['flash']);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +16,11 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="login_page">
+  <?php if (!empty($flash)) : ?>
+    <div style="margin:16px; padding:12px; border-radius:6px; background:#0b2e13; color:#d4edda; border:1px solid #155724;">
+      <?php echo $flash_safe; ?>
+    </div>
+  <?php endif; ?>
   <!-- Header / Top Nav -->
   <header>
     <div id="wrapper">
