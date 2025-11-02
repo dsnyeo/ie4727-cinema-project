@@ -73,8 +73,7 @@ body {
   display: grid;
   place-items: center;
   width: 40px; height: 40px;
-  border: 1px solid #fff;
-  background: #eee;
+  
 }
 
 .brand_text { line-height: 1.05; font-size: 12px; }
