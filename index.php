@@ -74,7 +74,11 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
           <nav>
             <ul>
               <li><a href="#">PROMOTIONS</a></li>
-              <li><a href="#">BOOKINGS</a></li>
+              <?php if (isset($_SESSION['sess_user'])): ?>
+                <li><a href="bookings.php">BOOKINGS</a></li>
+              <?php else: ?>
+                <li><a href="login-main.php?redirect=bookings.php">BOOKINGS</a></li>
+              <?php endif; ?>
               <li><a href="#">PROFILE</a></li>
             </ul>
           </nav>
