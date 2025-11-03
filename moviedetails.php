@@ -65,17 +65,17 @@ $st->close();
         <a class="brand" href="#">
           <span class="brand_logo">🎬</span>
           <span class="brand_text">
-            <strong>CINEMA</strong><br />
-            <span>NAME</span>
+            <strong>CineLux</strong><br />
+            <span>Theatre</span>
           </span>
         </a>
 
         <div id="main_nav">
           <nav>
             <ul>
-              <li><a href="movies.php">MOVIES</a></li>
-              <li><a href="#">BOOKINGS</a></li>
               <li><a href="#">PROMOTIONS</a></li>
+              <li><a href="#">BOOKINGS</a></li>
+              <li><a href="#">PROFILE</a></li>
             </ul>
           </nav>
         </div>
@@ -203,10 +203,10 @@ $st->close();
   <div class="container footer_links">
     <a href="index.php">HOME</a>
     <a href="#">CONTACT US</a>
-    <a href="#">CAREERS</a>
+    <a href="jobs.php">JOBS AT CineLux Theatre</a>
   </div>
   <div class="container"><hr class="footer_divider" /></div>
-  <small style="display:block;text-align:center;">© <?= date('Y') ?> Cinema Name</small>
+  <small style="display:block;text-align:center;">© <?= date('Y') ?> CineLux Theatre</small>
 </footer>
 
 </body>

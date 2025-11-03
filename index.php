@@ -62,8 +62,8 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
   <header>
     <div id="wrapper">
       <div class="container header_bar">
-        <a class="brand" href="#">
-          <span class="brand_logo" img src="./images/cinema_logo.png" ></span>
+        <a class="brand" href="index.php">
+          <span class="brand_logo" img src="./images/cinema_logo.png"></span>
           <span class="brand_text">
             <strong>CineLux</strong><br />
             <span>Theatre</span>
@@ -162,7 +162,7 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
   <div class="container footer_links">
     <a href="index.php">HOME</a>
     <a href="#">CONTACT US</a>
-    <a href="jobs.php">JOBS AT &quot;CINEMA NAME&quot;</a>
+    <a href="jobs.php">JOBS AT CineLux Theatre</a>
   </div>
 
   <!-- thin line across the container -->

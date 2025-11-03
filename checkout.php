@@ -323,9 +323,9 @@ function toggleCardDetails() {
         <div id="main_nav">
           <nav>
             <ul>
-              <li><a href="movies.php">MOVIES</a></li>
-              <li><a href="#">BOOKINGS</a></li>
               <li><a href="#">PROMOTIONS</a></li>
+              <li><a href="#">BOOKINGS</a></li>
+              <li><a href="#">PROFILE</a></li>
             </ul>
           </nav>
         </div>
