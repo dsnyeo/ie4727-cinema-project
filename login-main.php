@@ -25,20 +25,20 @@ if ($flash) {
   <header>
     <div id="wrapper">
     <div class="container header_bar">
-      <a class="brand" href="#"> 
-        <span class="brand_logo">🎬</span>
+      <a class="brand" href="index.php"> 
+        <span class="brand_logo"img src="./images/cinema_logo.png"></span>
         <span class="brand_text">
-          <strong>CINEMA</strong><br />
-          <span>NAME</span>
+          <strong>CineLux</strong><br />
+          <span>Theatre</span>
         </span>
       </a>
       
       <div id="main_nav">
       <nav>
         <ul>
-          <li><a href="#">MOVIES</a></li>
-          <li><a href="#">CINEMAS</a></li>
           <li><a href="#">PROMOTIONS</a></li>
+          <li><a href="#">BOOKINGS</a></li>
+          <li><a href="#">PROFILE</a></li>
         </ul>
       </nav>
       </div>
@@ -68,9 +68,9 @@ if ($flash) {
   <!-- Footer -->
 <footer class="site_footer">
   <div class="container footer_links">
-    <a href="#">HOME</a>
+    <a href="index.php">HOME</a>
     <a href="#">CONTACT US</a>
-    <a href="#">JOBS AT &quot;CINEMA NAME&quot;</a>
+    <a href="jobs.php">JOBS AT CineLux Theatre</a>
   </div>
 
   <!-- thin line across the container -->
@@ -84,25 +84,25 @@ if ($flash) {
       <div class="panel_title">CONNECT WITH US</div>
 <ul class="icon_list" aria-label="Social links">
   <li>
-    <a href="https://www.facebook.com/" class="icon_btn">
+    <a class="icon_btn">
       <!-- Facebook / Meta-style "f" -->
       <img src="./images/fb.svg" alt="Facebook" >
     </a>
   </li>
   <li>
-    <a href="https://x.com/?lang=en" class="icon_btn" aria-label="Twitter / X">
+    <a class="icon_btn" aria-label="Twitter / X">
       <!-- Twitter bird -->
       <img src="./images/x.svg" alt="Twitter | X">
     </a>
   </li>
   <li>
-    <a href="https://www.instagram.com/" class="icon_btn" aria-label="Instagram">
+    <a class="icon_btn" aria-label="Instagram">
       <!-- Instagram camera -->
       <img src="./images/instagram.svg" alt="Instagram">
     </a>
   </li>
   <li>
-    <a href="https://www.tiktok.com/en/" class="icon_btn" aria-label="TikTok">
+    <a class="icon_btn" aria-label="TikTok">
       <!-- TikTok note -->
       <img src="./images/tiktok.svg" alt="TikTok">
     </a>

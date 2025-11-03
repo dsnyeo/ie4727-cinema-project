@@ -3,7 +3,6 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 if (!function_exists('e')) { function e($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); } }
 
-// ---- Server-side validation (mirrors the old jobs rules) ----
 $errors = [];
 $saved  = false;
 
@@ -14,13 +13,13 @@ function start_ok($iso){
   if (!$iso) return false;
   $today = new DateTime('today');
   $start = DateTime::createFromFormat('Y-m-d', $iso);
-  return $start && $start > $today; // future only
+  return $start && $start > $today;
 }
 function bday_ok($iso){
   if (!$iso) return false;
   $bday = DateTime::createFromFormat('Y-m-d', $iso);
   $min  = new DateTime('-18 years');
-  return $bday && $bday <= $min; // >= 18 years old
+  return $bday && $bday <= $min;
 }
 
 $Name = $_POST['Name'] ?? '';
@@ -49,13 +48,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($dbcnx) || $dbcnx->connect_errno) {
       $errors['_page'] = 'Database connection not found or failed.';
     } else {
-      // Insert into cinema.jobs
       $sql = "INSERT INTO jobs (name, email, start_date, birthday, experience) VALUES (?,?,?,?,?)";
       if ($stmt = $dbcnx->prepare($sql)) {
         $stmt->bind_param("sssss", $Name, $Email, $StartDate, $Birthday, $Experience);
         if ($stmt->execute()) {
           $saved = true;
-          // Clear fields after save
           $Name = $Email = $StartDate = $Birthday = $Experience = '';
         } else {
           $errors['_page'] = 'Failed to save your application. Please try again.';
@@ -84,24 +81,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </style>
 </head>
 <body>
-  <!-- Header (same look as index.php) -->
   <header>
     <div id="wrapper">
       <div class="container header_bar">
         <a class="brand" href="#">
           <span class="brand_logo">🎬</span>
           <span class="brand_text">
-            <strong>CINEMA</strong><br />
-            <span>NAME</span>
+            <strong>CineLux</strong><br />
+            <span>Theatre</span>
           </span>
         </a>
 
         <div id="main_nav">
           <nav>
             <ul>
-              <li><a href="movies.php">MOVIES</a></li>
-              <li><a href="#">BOOKINGS</a></li>
               <li><a href="#">PROMOTIONS</a></li>
+              <li><a href="#">BOOKINGS</a></li>
+              <li><a href="#">PROFILE</a></li>
             </ul>
           </nav>
         </div>
@@ -119,8 +115,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </header>
 
   <main class="container section" role="main">
-    <h1 class="section_title">Jobs at "CINEMA NAME"</h1>
-    <p>Want to work at CINEMA NAME? Fill out the form below to start your application. Required fields are marked with an asterisk *</p>
+    <h1 class="section_title">Jobs at CineLux Theatre</h1>
+    <p>Want to work at CineLux Theatre? Fill out the form below to start your application. Required fields are marked with an asterisk *</p>
 
     <?php if ($saved): ?>
       <div class="notice ok">✅ Your application has been submitted successfully. We’ll be in touch!</div>
@@ -207,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <div class="container footer_links">
     <a href="index.php">HOME</a>
     <a href="#">CONTACT US</a>
-    <a href="jobs.php">JOBS AT &quot;CINEMA NAME&quot;</a>
+    <a href="jobs.php">JOBS AT CineLux Theatre</a>
   </div>
 
   <!-- thin line across the container -->

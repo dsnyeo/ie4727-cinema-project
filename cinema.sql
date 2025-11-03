@@ -9,42 +9,42 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS movies (
-  MovieCode         VARCHAR(20)  NOT NULL PRIMARY KEY,  
-  Title             VARCHAR(100) NOT NULL,              
-  PosterPath        VARCHAR(255),                       
-  Synopsis          TEXT NOT NULL,
-  Genre             VARCHAR(30) NOT NULL,                  
-  TicketPrice       FLOAT NOT NULL,              
-  Rating            VARCHAR(10)  NOT NULL,              
-  ReleaseDate       DATE,
-  DurationMinutes   INT NOT NULL,
-  Trending          TINYINT(1)   NOT NULL DEFAULT 0,
-  OnSale            TINYINT(1)   NOT NULL DEFAULT 0,    
-  Language          VARCHAR(30)  NOT NULL DEFAULT 'English'
+  MovieCode VARCHAR(20) NOT NULL PRIMARY KEY,
+  Title VARCHAR(100) NOT NULL,
+  PosterPath VARCHAR(255),
+  Synopsis TEXT NOT NULL,
+  Genre VARCHAR(30) NOT NULL,
+  TicketPrice FLOAT NOT NULL,
+  Rating VARCHAR(10) NOT NULL,
+  ReleaseDate DATE,
+  DurationMinutes INT NOT NULL,
+  Trending TINYINT(1) NOT NULL DEFAULT 0,
+  OnSale TINYINT(1) NOT NULL DEFAULT 0,
+  Language VARCHAR(30) NOT NULL DEFAULT 'English'
 );
 
 CREATE TABLE IF NOT EXISTS jobs (
-  id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  name        VARCHAR(100)  NOT NULL,
-  email       VARCHAR(255)  NOT NULL,
-  start_date  DATE          NOT NULL,
-  birthday    DATE          NOT NULL,
-  experience  TEXT          NOT NULL,
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  start_date DATE NOT NULL,
+  birthday DATE NOT NULL,
+  experience TEXT NOT NULL,
   UNIQUE INDEX idx_jobs_email (email),
   INDEX idx_jobs_start_date (start_date)
-)
+);
 
 CREATE TABLE IF NOT EXISTS screentime (
-  hall_code   VARCHAR(4) NOT NULL,          
-  timeslot    TIME NOT NULL,                
-  movie_code  VARCHAR(32) NOT NULL,          
+  hall_code VARCHAR(4) NOT NULL,
+  timeslot TIME NOT NULL,
+  movie_code VARCHAR(32) NOT NULL,
   PRIMARY KEY (hall_code, timeslot),
   CONSTRAINT fk_movie FOREIGN KEY (movie_code) REFERENCES movies(MovieCode)
 );
 
 CREATE TABLE IF NOT EXISTS tickets (
   TicketID INT AUTO_INCREMENT PRIMARY KEY,
-  OrderID  INT NOT NULL,
+  OrderID INT NOT NULL,
   HallID VARCHAR(10) NOT NULL,
   ShowDate DATE NOT NULL,
   TimeSlot TIME NOT NULL,
@@ -64,14 +64,14 @@ CREATE TABLE IF NOT EXISTS tickets (
 
 
 CREATE TABLE IF NOT EXISTS bookings (
-  OrderID        INT AUTO_INCREMENT PRIMARY KEY,
-  CustName       VARCHAR(100) NOT NULL,
-  CustEmail      VARCHAR(100) NOT NULL,
-  CustPhone      VARCHAR(30)  NOT NULL,
-  PaymentMethod  ENUM('cash','card') NOT NULL,
-  PaidAmount     DECIMAL(10,2) NOT NULL,  
-  UserID         INT UNSIGNED NULL,
-  CreatedAt      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  OrderID INT AUTO_INCREMENT PRIMARY KEY,
+  CustName VARCHAR(100) NOT NULL,
+  CustEmail VARCHAR(100) NOT NULL,
+  CustPhone VARCHAR(30)  NOT NULL,
+  PaymentMethod ENUM('cash','card') NOT NULL,
+  PaidAmount DECIMAL(10,2) NOT NULL,  
+  UserID INT UNSIGNED NULL,
+  CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
   CONSTRAINT fk_booking_user
     FOREIGN KEY (UserID)
