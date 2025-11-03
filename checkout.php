@@ -42,249 +42,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Checkout</title>
 <link rel="stylesheet" href="styles.css" />
-<style>
-  .checkout-wrapper{
-    width:100%;
-    max-width:1000px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:1.5rem;
-  }
-
-  /* full width row across both columns */
-  .full-row{
-    grid-column:1 / span 2;
-  }
-
-  .panel{
-    background:#1e293b;
-    border:1px solid #334155;
-    border-radius:16px;
-    padding:1.25rem 1.5rem 1.5rem;
-    box-shadow:0 24px 60px rgba(0,0,0,.8);
-  }
-
-  .panel-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    margin-bottom:1rem;
-    border-bottom:1px solid #334155;
-    padding-bottom:.75rem;
-  }
-  .panel-title{
-    font-size:1rem;
-    font-weight:600;
-    color:#fff;
-    line-height:1.3;
-  }
-  .panel-desc{
-    font-size:.8rem;
-    color:#94a3b8;
-    line-height:1.4;
-    margin-top:.25rem;
-  }
-
-  /* order summary table-ish layout */
-  .order-item{
-    background:#0f172a;
-    border:1px solid #334155;
-    border-radius:12px;
-    padding:1rem;
-    margin-bottom:1rem;
-    font-size:.85rem;
-    line-height:1.4;
-    color:#e2e8f0;
-  }
-
-  .order-headline{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:space-between;
-    gap:.5rem;
-    margin-bottom:.5rem;
-  }
-
-  .movie-title{
-    font-size:1rem;
-    font-weight:600;
-    color:#fff;
-    line-height:1.3;
-    margin:0;
-  }
-
-  .meta-line{
-    font-size:.75rem;
-    color:#94a3b8;
-    display:flex;
-    flex-wrap:wrap;
-    gap:.5rem .75rem;
-  }
-
-  .seat-line{
-    display:flex;
-    flex-wrap:wrap;
-    gap:.4rem;
-    margin-top:.75rem;
-    margin-bottom:.75rem;
-  }
-  .seat-chip{
-    background:#0ea5e9;
-    border-radius:8px;
-    padding:.4rem .6rem;
-    font-size:.8rem;
-    font-weight:600;
-    color:#0f172a;
-    border:2px solid #0ea5e9;
-    line-height:1.2;
-  }
-
-  .calc-row{
-    display:flex;
-    justify-content:space-between;
-    font-size:.8rem;
-    line-height:1.4;
-    margin-bottom:.25rem;
-  }
-  .calc-row .label{ color:#94a3b8; }
-  .calc-row .value{ color:#fff;font-weight:600; }
-
-  .grand-total-box{
-    border-top:1px solid #334155;
-    margin-top:1rem;
-    padding-top:1rem;
-    display:flex;
-    justify-content:space-between;
-    font-size:1rem;
-    line-height:1.4;
-  }
-  .grand-total-box .label{
-    color:#fff;
-    font-weight:600;
-  }
-  .grand-total-box .value{
-    color:#38bdf8;
-    font-weight:600;
-    font-size:1.05rem;
-  }
-
-  /* form styles */
-  .form-group{
-    margin-bottom:1rem;
-    display:flex;
-    flex-direction:column;
-  }
-
-  .form-label{
-    font-size:.8rem;
-    font-weight:500;
-    color:#cbd5e1;
-    margin-bottom:.4rem;
-    display:flex;
-    justify-content:space-between;
-    line-height:1.3;
-  }
-
-  .form-input{
-    background:#0f172a;
-    border:1px solid #334155;
-    border-radius:8px;
-    padding:.7rem .75rem;
-    font-size:.9rem;
-    line-height:1.2;
-    color:#fff;
-    outline:none;
-  }
-  .form-input:focus{
-    border-color:#0ea5e9;
-    box-shadow:0 0 0 3px rgba(14,165,233,.3);
-  }
-
-  .radio-row{
-    display:flex;
-    align-items:center;
-    gap:.5rem;
-    font-size:.9rem;
-    line-height:1.2;
-    color:#fff;
-    margin-bottom:.75rem;
-  }
-
-  .radio-row input[type="radio"]{
-    width:1rem;
-    height:1rem;
-    cursor:pointer;
-  }
-
-  /* credit card details box that toggles */
-  .card-details{
-    background:#0f172a;
-    border:1px solid #334155;
-    border-radius:12px;
-    padding:1rem;
-    margin-top:.5rem;
-  }
-
-  .card-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:1rem;
-  }
-
-  .actions{
-    margin-top:2rem;
-    grid-column:1 / span 2;
-    display:flex;
-    flex-wrap:wrap;
-    gap:.75rem;
-  }
-
-  .btn-main{
-    flex:1 1 auto;
-    min-width:200px;
-    cursor:pointer;
-    appearance:none;
-    border:0;
-    border-radius:10px;
-    background:#0ea5e9;
-    color:#0f172a;
-    font-weight:600;
-    font-size:.95rem;
-    line-height:1.2;
-    padding:.9rem 1rem;
-    text-align:center;
-  }
-
-  .btn-ghost{
-    flex:1 1 auto;
-    min-width:200px;
-    cursor:pointer;
-    appearance:none;
-    background:transparent;
-    color:#94a3b8;
-    font-weight:500;
-    font-size:.9rem;
-    line-height:1.2;
-    border:1px solid #334155;
-    border-radius:10px;
-    padding:.9rem 1rem;
-    text-align:center;
-    text-decoration:none;
-  }
-
-  @media(max-width:850px){
-    .checkout-wrapper{
-      grid-template-columns:1fr;
-    }
-    .full-row{
-      grid-column:1;
-    }
-    .actions{
-      grid-column:1;
-      flex-direction:column;
-    }
-  }
-</style>
 
 <script>
 // toggle credit card fields based on radio select
@@ -333,6 +90,9 @@ function toggleCardDetails() {
         <div>
           <?php if (isset($_SESSION['sess_user'])): ?>
             <span class="welcome_text">
+              <a href="cart.php" style="text-decoration: none;">
+              🛒
+              </a>
               👋 Welcome, <strong><?= e($_SESSION['sess_user']) ?></strong>
             </span>
             <a class="btn btn_ghost" href="logout.php">LOGOUT</a>
@@ -343,6 +103,8 @@ function toggleCardDetails() {
       </div>
     </div>
   </header>
+  <div class="checkout-container">
+
 <form action="insert_booking.php" method="post" class="checkout-wrapper">
   <!-- BOX 1: Order Summary -->
   <section class="panel full-row">
@@ -557,12 +319,83 @@ function toggleCardDetails() {
 
   <!-- ACTION BUTTONS -->
   <div class="actions">
-    <button type="submit" class="btn-main">Place Order & Confirm Seats →</button>
+    <button type="submit" class="btn-main">Book & Confirm Seats →</button>
     <a class="btn-ghost" href="cart.php">← Back to Cart</a>
   </div>
 
 </form>
+  </div>
+  <!-- Footer -->
+<footer class="site_footer">
+  <div class="container footer_links">
+    <a href="index.php">HOME</a>
+    <a href="#">CONTACT US</a>
+    <a href="jobs.php">JOBS AT CineLux Theatre</a>
+  </div>
 
+  <!-- thin line across the container -->
+  <div class="container">
+    <hr class="footer_divider" />
+  </div>
+
+  <!-- two panels: left = connect, right = payment -->
+  <div class="container footer_panels">
+    <div class="footer_panel left">
+      <div class="panel_title">CONNECT WITH US</div>
+<ul class="icon_list" aria-label="Social links">
+  <li>
+    <a class="icon_btn">
+      <!-- Facebook / Meta-style "f" -->
+      <img src="./images/fb.svg" alt="Facebook" >
+    </a>
+  </li>
+  <li>
+    <a class="icon_btn" aria-label="Twitter / X">
+      <!-- Twitter bird -->
+      <img src="./images/x.svg" alt="Twitter | X">
+    </a>
+  </li>
+  <li>
+    <a class="icon_btn" aria-label="Instagram">
+      <!-- Instagram camera -->
+      <img src="./images/instagram.svg" alt="Instagram">
+    </a>
+  </li>
+  <li>
+    <a class="icon_btn" aria-label="TikTok">
+      <!-- TikTok note -->
+      <img src="./images/tiktok.svg" alt="TikTok">
+    </a>
+  </li>
+</ul>
+    </div>
+
+    <div class="footer_panel right">
+      <div class="panel_title">SUPPORTED PAYMENT</div>
+<ul class="icon_list" aria-label="Payment">
+  <li>
+    <a href="#" class="icon_btn">
+      <!-- Facebook / Meta-style "f" -->
+      <img src="./images/visa.svg" alt="visa" >
+    </a>
+  </li>
+  <li>
+    <a href="#" class="icon_btn" aria-label="mastercard">
+      <!-- Twitter bird -->
+      <img src="./images/mastercard.svg" alt="mastercard">
+    </a>
+  </li>
+  <li>
+    <a href="#" class="icon_btn" aria-label="cash">
+      <!-- Instagram camera -->
+      <img src="./images/cash.svg" alt="cash">
+    </a>
+  </li>
+</ul>
+    <small>Credit/Debit Cards and Cash are welcomed</small>
+    </div>
+  </div>
+</footer>
 <script>
 // run once on load to ensure cardBox hidden/required state matches default radio
 toggleCardDetails();

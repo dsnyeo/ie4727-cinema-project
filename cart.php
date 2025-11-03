@@ -44,227 +44,49 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Your Cart</title>
 <link rel="stylesheet" href="styles.css" />
-<style>
 
-
-  .cart-shell{
-    width:100%;
-    max-width:700px;
-    background:#1e293b;
-    border-radius:16px;
-    padding:1.5rem 2rem 2rem;
-    box-shadow:0 24px 60px rgba(0,0,0,.8);
-    display:flex;
-    flex-direction:column;
-    gap:1.5rem;
-  }
-
-  /* header */
-  .cart-header{
-    border-bottom:1px solid #334155;
-    padding-bottom:1rem;
-  }
-  .cart-title{
-    font-size:1.25rem;
-    font-weight:600;
-    color:#fff;
-    line-height:1.3;
-  }
-  .cart-sub{
-    font-size:.8rem;
-    color:#94a3b8;
-    line-height:1.4;
-    margin-top:.25rem;
-  }
-
-  /* list of items */
-  .cart-items-list{
-    display:flex;
-    flex-direction:column;
-    gap:1rem;
-  }
-
-  /* each item card */
-  .cart-item{
-    background:#0f172a;
-    border:1px solid #334155;
-    border-radius:12px;
-    padding:1rem 1rem .9rem;
-    display:flex;
-    flex-direction:column;
-    gap:.75rem;
-  }
-
-  .item-topline{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    flex-wrap:wrap;
-    gap:.5rem;
-  }
-
-  .movie-block{
-    min-width:0;
-  }
-  .movie-title{
-    font-size:1rem;
-    line-height:1.3;
-    font-weight:600;
-    color:#fff;
-    margin:0;
-    word-break:break-word;
-  }
-  .movie-meta-row{
-    display:flex;
-    flex-wrap:wrap;
-    gap:.5rem .75rem;
-    font-size:.75rem;
-    color:#94a3b8;
-    line-height:1.3;
-    margin-top:.4rem;
-  }
-  .badge{
-    background:#1e293b;
-    border:1px solid #334155;
-    border-radius:6px;
-    padding:.25rem .5rem;
-    font-size:.7rem;
-    font-weight:500;
-    color:#e2e8f0;
-    line-height:1.2;
-    white-space:nowrap;
-  }
-
-  /* seats */
-  .seat-line{
-    display:flex;
-    flex-wrap:wrap;
-    gap:.5rem;
-  }
-  .seat-chip{
-    background:#0ea5e9;
-    border-radius:8px;
-    padding:.4rem .6rem;
-    font-size:.8rem;
-    font-weight:600;
-    color:#0f172a;
-    line-height:1.2;
-    border:2px solid #0ea5e9;
-  }
-
-  /* price per item */
-  .item-price-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    font-size:.85rem;
-    line-height:1.4;
-    color:#e2e8f0;
-  }
-  .item-price-row .label{
-    color:#94a3b8;
-  }
-  .item-price-row .value{
-    color:#fff;
-    font-weight:600;
-  }
-
-  /* divider line between items */
-  .item-divider{
-    height:1px;
-    background:#334155;
-    margin-top:.5rem;
-  }
-
-  /* grand total */
-  .cart-summary{
-    background:#0f172a;
-    border:1px solid #334155;
-    border-radius:12px;
-    padding:1rem 1rem .9rem;
-    color:#e2e8f0;
-  }
-  .summary-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    font-size:.9rem;
-    line-height:1.4;
-    margin-bottom:.5rem;
-  }
-  .summary-row .label{
-    color:#94a3b8;
-  }
-  .summary-row .value{
-    font-weight:600;
-    color:#fff;
-  }
-  .summary-total{
-    border-top:1px solid #334155;
-    margin-top:.75rem;
-    padding-top:.75rem;
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    font-size:1rem;
-    line-height:1.4;
-  }
-  .summary-total .label{
-    font-weight:600;
-    color:#fff;
-  }
-  .summary-total .value{
-    font-size:1.05rem;
-    color:#38bdf8;
-    font-weight:600;
-  }
-
-  /* actions row */
-  .actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:.75rem;
-  }
-  .btn-main{
-    flex:1 1 auto;
-    min-width:180px;
-    cursor:pointer;
-    appearance:none;
-    border:0;
-    border-radius:10px;
-    background:#0ea5e9;
-    color:#0f172a;
-    font-weight:600;
-    font-size:.95rem;
-    line-height:1.2;
-    padding:.8rem 1rem;
-    text-align:center;
-  }
-  .btn-ghost{
-    flex:1 1 auto;
-    min-width:180px;
-    cursor:pointer;
-    appearance:none;
-    background:transparent;
-    color:#94a3b8;
-    font-weight:500;
-    font-size:.9rem;
-    line-height:1.2;
-    border:1px solid #334155;
-    border-radius:10px;
-    padding:.8rem 1rem;
-    text-align:center;
-    text-decoration:none;
-  }
-
-  @media(max-width:600px){
-    .actions{
-      flex-direction:column;
-    }
-  }
-</style>
 </head>
 <body>
+  <!-- Header -->
+  <header>
+    <div id="wrapper">
+      <div class="container header_bar">
+        <a class="brand" href="#">
+          <span class="brand_logo">🎬</span>
+          <span class="brand_text">
+            <strong>CINEMA</strong><br />
+            <span>NAME</span>
+          </span>
+        </a>
+
+        <div id="main_nav">
+          <nav>
+            <ul>
+              <li><a href="#">PROMOTIONS</a></li>
+              <li><a href="#">BOOKINGS</a></li>
+              <li><a href="#">PROFILE</a></li>
+            </ul>
+          </nav>
+        </div>
+
+        <div>
+          <?php if (isset($_SESSION['sess_user'])): ?>
+            <span class="welcome_text">
+              <a href="cart.php" style="text-decoration: none;">
+              🛒
+              </a>
+              👋 Welcome, <strong><?= e($_SESSION['sess_user']) ?></strong>
+            </span>
+            <a class="btn btn_ghost" href="logout.php">LOGOUT</a>
+          <?php else: ?>
+            <a class="btn btn_ghost" href="login-main.php">LOGIN</a>
+          <?php endif; ?>
+        </div>
+      </div>
+    </div>
+  </header>
+  <div class="cart-container">
+
    <div class="cart-shell">
 
     <!-- Cart Header -->
@@ -410,7 +232,7 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
           <input type="hidden" name="item[<?= $i ?>][seats]" value="<?= e($ci_seatsCSV) ?>">
         <?php endforeach; ?>
 
-        <button type="submit" class="btn-main">Checkout →</button>
+        <button type="submit" class="btn-checkout">Checkout →</button>
       </form>
 
       <!-- Continue shopping / add more -->
@@ -418,5 +240,77 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
     </div>
 
   </div>
+    </div>
+<!-- Footer -->
+<footer class="site_footer">
+  <div class="container footer_links">
+    <a href="index.php">HOME</a>
+    <a href="#">CONTACT US</a>
+    <a href="jobs.php">JOBS AT CineLux Theatre</a>
+  </div>
+
+  <!-- thin line across the container -->
+  <div class="container">
+    <hr class="footer_divider" />
+  </div>
+
+  <!-- two panels: left = connect, right = payment -->
+  <div class="container footer_panels">
+    <div class="footer_panel left">
+      <div class="panel_title">CONNECT WITH US</div>
+<ul class="icon_list" aria-label="Social links">
+  <li>
+    <a class="icon_btn">
+      <!-- Facebook / Meta-style "f" -->
+      <img src="./images/fb.svg" alt="Facebook" >
+    </a>
+  </li>
+  <li>
+    <a class="icon_btn" aria-label="Twitter / X">
+      <!-- Twitter bird -->
+      <img src="./images/x.svg" alt="Twitter | X">
+    </a>
+  </li>
+  <li>
+    <a class="icon_btn" aria-label="Instagram">
+      <!-- Instagram camera -->
+      <img src="./images/instagram.svg" alt="Instagram">
+    </a>
+  </li>
+  <li>
+    <a class="icon_btn" aria-label="TikTok">
+      <!-- TikTok note -->
+      <img src="./images/tiktok.svg" alt="TikTok">
+    </a>
+  </li>
+</ul>
+    </div>
+
+    <div class="footer_panel right">
+      <div class="panel_title">SUPPORTED PAYMENT</div>
+<ul class="icon_list" aria-label="Payment">
+  <li>
+    <a href="#" class="icon_btn">
+      <!-- Facebook / Meta-style "f" -->
+      <img src="./images/visa.svg" alt="visa" >
+    </a>
+  </li>
+  <li>
+    <a href="#" class="icon_btn" aria-label="mastercard">
+      <!-- Twitter bird -->
+      <img src="./images/mastercard.svg" alt="mastercard">
+    </a>
+  </li>
+  <li>
+    <a href="#" class="icon_btn" aria-label="cash">
+      <!-- Instagram camera -->
+      <img src="./images/cash.svg" alt="cash">
+    </a>
+  </li>
+</ul>
+    <small>Credit/Debit Cards and Cash are welcomed</small>
+    </div>
+  </div>
+</footer>
 </body>
 </html>
