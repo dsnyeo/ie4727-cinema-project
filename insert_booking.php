@@ -23,7 +23,7 @@ $custEmail      = $_POST['cust_email'];
 $custPhone      = $_POST['cust_phone'];
 $paymentMethod  = $_POST['payment_method']; // 'cash' or 'card'
 $grandTotal     = (float) $_POST['grand_total'];
-$userId         = $_SESSION['UserID'] ?? null; // if you track logged-in users
+$userId         = $_SESSION['sess_user_id'] ?? null; // if you track logged-in users
 
 // Safety clamp
 if ($grandTotal < 0) { $grandTotal = 0; }

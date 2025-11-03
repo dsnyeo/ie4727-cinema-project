@@ -15,12 +15,14 @@ if ($result!=0){
         $dbusername=$row['Username'];  
         $dbpassword=$row['UserPassword'];
         $dbuserID=$row['UserID'];
+        $dbuserEmail=$row['Email'];
     }
     if($username == $dbusername && $password == $dbpassword)  
         {  
         session_start();  
         $_SESSION['sess_user']=$username;
         $_SESSION['sess_user_id']=$dbuserID;
+        $_SESSION['sess_user_email']=$dbuserEmail;
         header("Location: index.php");  
         }
     else{

@@ -17,6 +17,8 @@ if (empty($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
 $cartItems = $_SESSION['cart'];
 $PRICE_PER_SEAT = 8.00;
 
+
+
 // we also accept POST from previous page for consistency
 $grandTotalRaw = 0;
 foreach ($cartItems as $ci) {
@@ -444,15 +446,17 @@ function toggleCardDetails() {
     <div class="form-group">
       <label class="form-label" for="cust_name">Full Name <span style="color:#38bdf8">*</span></label>
       <input class="form-input" type="text" id="cust_name" name="cust_name"
-             placeholder="e.g. Tan Wei Ming"
-             required>
+          placeholder="e.g. Tan Wei Ming"
+          value="<?= isset($_SESSION['sess_user']) ? e($_SESSION['sess_user']) : '' ?>"
+          required>
     </div>
 
     <div class="form-group">
       <label class="form-label" for="cust_email">Email <span style="color:#38bdf8">*</span></label>
       <input class="form-input" type="email" id="cust_email" name="cust_email"
-             placeholder="e.g. weiming@example.com"
-             required>
+         placeholder="e.g. weiming@example.com"
+         value="<?= isset($_SESSION['sess_user_email']) ? e($_SESSION['sess_user_email']) : '' ?>"
+         required>
     </div>
 
     <div class="form-group">
