@@ -62,8 +62,8 @@ $st->close();
   <header>
     <div id="wrapper">
       <div class="container header_bar">
-        <a class="brand" href="#">
-          <span class="brand_logo">🎬</span>
+        <a class="brand" href="index.php" >
+          <span class="brand_logo" img src="./images/cinema_logo.png"></span>
           <span class="brand_text">
             <strong>CineLux</strong><br />
             <span>Theatre</span>
@@ -186,7 +186,7 @@ $st->close();
 
       <div class="details_actions">
         <a class="btn btn-outline" href="index.php">Back to Home</a>
-        <button type="submit" class="btn btn-primary">Continue</button>
+        <button type="submit" class="btn btn-primary" id="btn-continue">Continue</button>
       </div>
     </form>
   <?php endif; ?>
@@ -208,6 +208,36 @@ $st->close();
   <div class="container"><hr class="footer_divider" /></div>
   <small style="display:block;text-align:center;">© <?= date('Y') ?> CineLux Theatre</small>
 </footer>
+
+<script>
+(function () {
+  // login flag from PHP
+  var IS_LOGGED_IN = <?php echo json_encode(isset($_SESSION['user_id'])); ?>;
+  // exact current URL (path + query), e.g. "moviedetails.php?id=123"
+  var RETURN_URL = <?php echo json_encode($_SERVER['REQUEST_URI']); ?>;
+
+  function onReady(fn){ if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
+
+  onReady(function () {
+    var btn = document.getElementById('btn-continue');
+    if (!btn) return;
+    var form = btn.closest('form');
+
+    function guard(e) {
+      if (!IS_LOGGED_IN) {
+        e.preventDefault();
+        alert('You need to be logged in to continue.');
+        // send them back to the SAME moviedetails page
+        window.location.assign(RETURN_URL);
+        return false;
+      }
+    }
+
+    btn.addEventListener('click', guard);
+    if (form) form.addEventListener('submit', guard); // covers Enter key
+  });
+})();
+</script>
 
 </body>
 </html>
