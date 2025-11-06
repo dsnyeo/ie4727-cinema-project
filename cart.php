@@ -63,7 +63,7 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
           <nav>
             <ul>
               <li><a href="#">PROMOTIONS</a></li>
-              <li><a href="#">BOOKINGS</a></li>
+              <li><a href="bookings.php">BOOKINGS</a></li>
               <li><a href="#">PROFILE</a></li>
             </ul>
           </nav>

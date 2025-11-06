@@ -3,6 +3,14 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
+  echo "<script>
+          alert('You can only access the bookings page while you are logged in.');
+          window.history.back();
+        </script>";
+  exit;
+}
+
+if (!isset($_SESSION['user_id'])) {
   if (isset($_SESSION['sess_user'])) {
     include __DIR__ . '/dbconnect.php';
     if (isset($dbcnx) && $dbcnx instanceof mysqli) {
@@ -131,12 +139,8 @@ function e($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
             <nav>
                 <ul>
                 <li><a href="#">PROMOTIONS</a></li>
-                <?php if (isset($_SESSION['sess_user'])): ?>
-                    <li><a href="bookings.php">BOOKINGS</a></li>
-                <?php else: ?>
-                    <li><a href="login-main.php?redirect=bookings.php">BOOKINGS</a></li>
-                <?php endif; ?>
-                    <li><a href="#">PROFILE</a></li>
+                <li><a href="bookings.php">BOOKINGS</a></li>
+                <li><a href="#">PROFILE</a></li>
                 </ul>
             </nav>
         </div>
