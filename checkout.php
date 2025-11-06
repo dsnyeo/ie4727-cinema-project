@@ -177,7 +177,7 @@ function toggleCardDetails() {
         </div>
       </div>
 
-      <!-- Hidden fields so place_order.php knows what we're buying -->
+      <!-- Hidden fields so insert_booking.php knows what we're buying -->
       <input type="hidden" name="item[<?php echo $i; ?>][movie_id]" value="<?php echo e($movie_id); ?>">
       <input type="hidden" name="item[<?php echo $i; ?>][movie_title]" value="<?php echo e($movie_title); ?>">
       <input type="hidden" name="item[<?php echo $i; ?>][hall_id]" value="<?php echo e($hall_id); ?>">

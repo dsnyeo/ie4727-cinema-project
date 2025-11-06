@@ -32,20 +32,15 @@ if ($paymentMethod === 'card') {
 $dbcnx->begin_transaction();
 
 try {
-    // 2) Insert booking (no CardLast4 column)
+    // 2) Insert booking
     $sqlBooking = "INSERT INTO bookings
       (CustName, CustEmail, CustPhone, PaymentMethod, PaidAmount, UserID)
       VALUES (?,?,?,?,?,?)";
-    if (!($stmt = $dbcnx->prepare($sqlBooking))) {
-        throw new Exception("Prepare failed for bookings insert: " . $dbcnx->error);
-    }
+
+    $stmt = $dbcnx->prepare($sqlBooking);
     $userIdForBind = ($userId === null) ? null : (int)$userId;
-    $stmt->bind_param("ssssdi",
-        $custName, $custEmail, $custPhone, $paymentMethod, $grandTotal, $userIdForBind
-    );
-    if (!$stmt->execute()) {
-        throw new Exception("Execute failed for bookings insert: " . $stmt->error);
-    }
+    $stmt->bind_param("ssssdi", $custName, $custEmail, $custPhone, $paymentMethod, $grandTotal, $userIdForBind);
+    $stmt->execute();
     $orderId = $stmt->insert_id;
     $stmt->close();
 
@@ -53,40 +48,46 @@ try {
     $sqlTicket = "INSERT INTO tickets
       (OrderID, HallID, ShowDate, TimeSlot, SeatCode, MovieCode, UserID)
       VALUES (?,?,?,?,?,?,?)";
-    if (!($stmtT = $dbcnx->prepare($sqlTicket))) {
-        throw new Exception("Prepare failed for tickets insert: " . $dbcnx->error);
-    }
+    $stmtT = $dbcnx->prepare($sqlTicket);
 
-    // Build a summary for the email while looping
     $emailRows = [];
 
     foreach ($_POST['item'] as $it) {
-        $movieCode = $it['movie_id']    ?? '';
-        $movieTitle= $it['movie_title'] ?? '';
-        $hallId    = $it['hall_id']     ?? '';
-        $showDate  = $it['show_date']   ?? '';
-        $timeslot  = $it['timeslot']    ?? ''; // 24h
-        $timeslot12= $it['timeslot12']  ?? '';
-        $seatsCSV  = $it['seats']       ?? '';
-        $seatsArr  = array_filter(array_map('trim', explode(',', $seatsCSV)));
+        $movieCode  = $it['movie_id']    ?? '';
+        $movieTitle = $it['movie_title'] ?? '';
+        $hallId     = $it['hall_id']     ?? '';
+        $showDate   = $it['show_date']   ?? '';
+        $timeslot   = $it['timeslot']    ?? ''; 
+        $timeslot12 = $it['timeslot12']  ?? '';
+        $seatsCSV   = $it['seats']       ?? '';
 
-        if (!$seatsArr) continue;
+        // Make sure seats are an array
+        $seatsArr = array_filter(array_map('trim', explode(',', $seatsCSV)));
+        if (count($seatsArr) === 0) continue;
 
+        // Insert each seat into tickets
         foreach ($seatsArr as $seatCode) {
             $userIdForBind = ($userId === null) ? null : (int)$userId;
             $stmtT->bind_param("isssssi",
-                $orderId, $hallId, $showDate, $timeslot, $seatCode, $movieCode, $userIdForBind
+                $orderId,
+                $hallId,
+                $showDate,
+                $timeslot,
+                $seatCode,
+                $movieCode,
+                $userIdForBind
             );
+
             if (!$stmtT->execute()) {
-                throw new Exception("Execute failed for ticket insert (seat $seatCode): " . $stmtT->error);
+                throw new Exception("Ticket insert failed for seat $seatCode: " . $stmtT->error);
             }
         }
 
-        // one email row per showtime (list all seats for that showtime)
+        // Build one summary row for email
         $emailRows[] = [
             'movie' => $movieTitle,
             'date'  => $showDate,
-            'time'  => $timeslot12 ?: $timeslot,
+            'time'  => ($timeslot12 ?: $timeslot),
             'hall'  => $hallId,
             'seats' => implode(', ', $seatsArr),
             'count' => count($seatsArr)
@@ -100,13 +101,12 @@ try {
     // 5) Clear cart
     unset($_SESSION['cart']);
 
-    // 6) Send acknowledgment email (Mercury local dev)
-    //    If you’re testing locally, make sure custEmail is a local mailbox or just override:
-    //    $custEmail = 'f31ee@localhost';
+    // 6) Send acknowledgment email
+    $from    = 'cineluxadm@localhost.com';
+    $EOL     = "\r\n";
+    $subject = "Booking Confirmation • Ref Order#{$orderId}";
 
-    $from   = 'cineluxadm@localhost.com';
-    $EOL    = "\r\n";
-    $subject= "Booking Confirmation • Ref #{$orderId}";
+    // Build email HTML table
     $rowsHtml = '';
     foreach ($emailRows as $r) {
         $rowsHtml .= '<tr>'.
@@ -120,8 +120,8 @@ try {
     }
 
     $body = '<div style="font-family:Arial,Helvetica,sans-serif;color:#0f172a">
-      <h2 style="margin:0 0 .5rem">Thanks, '.e($custName).'! Your booking is confirmed.</h2>
-      <p style="margin:.25rem 0">Reference: <strong>#'.(int)$orderId.'</strong></p>
+      <h2>Thanks, '.e($custName).'! Your booking is confirmed.</h2>
+      <p>Reference: <strong>#'.(int)$orderId.'</strong></p>
       <table style="border-collapse:collapse;margin:12px 0">
         <thead>
           <tr style="background:#f1f5f9">
@@ -135,20 +135,26 @@ try {
         </thead>
         <tbody>'.$rowsHtml.'</tbody>
       </table>
-      <p style="margin:.25rem 0"><strong>Grand Total:</strong> $'.number_format($grandTotal,2).'</p>'.
-      ($paymentMethod==='card' && $cardLast4 ? '<p>Paid by card • **** **** **** '.e($cardLast4).'</p>' : '<p>Payment method: '.e(strtoupper($paymentMethod)).'</p>').
+      <p><strong>Grand Total:</strong> $'.number_format($grandTotal,2).'</p>'.
+      ($paymentMethod==='card' && $cardLast4 
+          ? '<p>Paid by card • **** **** **** '.e($cardLast4).'</p>'
+          : '<p>Payment method: '.e(strtoupper($paymentMethod)).'</p>').
       '<p style="margin-top:12px">Enjoy your movie! 🎬</p>
     </div>';
 
     $headers  = "From: {$from}{$EOL}Reply-To: {$from}{$EOL}";
     $headers .= "MIME-Version: 1.0{$EOL}Content-Type: text/html; charset=UTF-8{$EOL}";
+
     @mail($custEmail, $subject, $body, $headers, '-f'.$from);
 
-    // 7) Redirect
-    header("Location: index.php?order_id=" . urlencode($orderId));
+    // 7) Redirect with popup
+    echo "<script>
+            alert('✅ Booking successful! Confirmation email has been sent to {$custEmail}.');
+            window.location.href = 'index.php?order_id={$orderId}';
+          </script>";
     exit;
 
 } catch (Exception $ex) {
     $dbcnx->rollback();
-    die("Checkout failed: " . $ex->getMessage());
+    die('Checkout failed: '.$ex->getMessage());
 }

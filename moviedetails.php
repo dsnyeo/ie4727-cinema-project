@@ -226,6 +226,42 @@ $st->close();
 </footer>
 
 <script>
+//Validate date
+const show_date = document.getElementById('show_date');
+const form      = document.querySelector('.ts-form');
+
+function dateOk(iso) {
+  if (!iso) return false;
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm   = String(now.getMonth() + 1).padStart(2, '0');
+  const dd   = String(now.getDate()).padStart(2, '0');
+  const today = `${yyyy}-${mm}-${dd}`;
+  return iso > today;  // disallow today and past
+}
+
+function validateShowDate(event) {
+  const value = show_date.value;
+  if (!value) {
+    alert("Please select a date.");
+    event.preventDefault();
+    return false;
+  }
+
+  if (!dateOk(value)) {
+    alert("You cannot select today or a past date.");
+    event.preventDefault();
+    show_date.focus();
+    return false;
+  }
+  return true;
+}
+
+// Hook into form submission
+if (form) {
+  form.addEventListener("submit", validateShowDate);
+}
+
 (function () {
   // login flag from PHP
   var IS_LOGGED_IN = <?php echo json_encode(isset($_SESSION['user_id'])); ?>;
