@@ -2,6 +2,22 @@
 include "dbconnect.php";
 session_start();
 
+if (!isset($_SESSION['user_id']) && isset($_SESSION['sess_user'])) {
+  include __DIR__ . '/dbconnect.php';
+  if (isset($dbcnx) && $dbcnx instanceof mysqli) {
+    if ($stmt = $dbcnx->prepare('SELECT UserID FROM users WHERE Username = ? LIMIT 1')) {
+      $stmt->bind_param('s', $_SESSION['sess_user']);
+      if ($stmt->execute()) {
+        $stmt->bind_result($uid);
+        if ($stmt->fetch()) {
+          $_SESSION['user_id'] = (int)$uid;
+        }
+      }
+      $stmt->close();
+    }
+  }
+}
+
 function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
 
 if (!isset($dbcnx) || $dbcnx->connect_errno) {

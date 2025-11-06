@@ -2,7 +2,7 @@
 
 session_start();
 
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['sess_user'])) {
   echo "<script>
           alert('You can only access the bookings page while you are logged in.');
           window.history.back();
