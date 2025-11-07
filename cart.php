@@ -1,3 +1,4 @@
+
 <?php
 session_start();
 include "dbconnect.php";
@@ -99,38 +100,35 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
 
     <!-- Cart Items List -->
     <div class="cart-items-list">
-      <?php foreach ($cartItems as $index => $item):
+      <?php
+  // filter out any empty entries
+  $nonEmptyItems = array_filter($cartItems, function($ci){
+      return !empty($ci['seats']) && is_array($ci['seats']) && count($ci['seats']) > 0;
+  });
 
-      // seats safety
-      $seatsArray = (isset($item['seats']) && is_array($item['seats']))
-                    ? $item['seats']
-                    : [];
-
-      $qty = count($seatsArray);
-
-      // 🚫 skip completely if no seats selected
-      if ($qty === 0) {
-          continue;
-      }
-
-      // now pull other fields only for non-empty items
-      $movie_id    = $item['movie_id']    ?? '';
-      $movie_title = $item['movie_title'] ?? '';
-      $hall_id     = $item['hall_id']     ?? '';
-      $show_date   = $item['show_date']   ?? '';
-      $timeslot12  = $item['timeslot12']  ?? '';
-
-      $itemSubtotalRaw = $qty * $PRICE_PER_SEAT;
-      $itemSubtotalFmt = number_format($itemSubtotalRaw, 2);
-
-      $seatCSV = implode(",", $seatsArray);
-  ?>
+  if (empty($nonEmptyItems)): ?>
+      <div class="cart-empty">
+        🛒 <strong>Your cart is empty.</strong><br>
+      </div>
+      <?php else: 
+          foreach ($nonEmptyItems as $index => $item):
+              $seatsArray = $item['seats'];
+              $qty = count($seatsArray);
+              $movie_id    = $item['movie_id']    ?? '';
+              $movie_title = $item['movie_title'] ?? '';
+              $hall_id     = $item['hall_id']     ?? '';
+              $show_date   = $item['show_date']   ?? '';
+              $timeslot12  = $item['timeslot12']  ?? '';
+              $itemSubtotalRaw = $qty * $PRICE_PER_SEAT;
+              $itemSubtotalFmt = number_format($itemSubtotalRaw, 2);
+              $seatCSV = implode(",", $seatsArray);
+      ?>
       <div class="cart-item">
 
         <!-- movie + session row -->
         <div class="item-topline">
           <div class="movie-block">
-            <p class="movie-title"><?= e($movie_title) ?></p>
+            <p class="white-movie-title"><?= e($movie_title) ?></p>
 
             <div class="movie-meta-row">
               <span class="badge"><?= e($movie_id) ?></span>
@@ -189,14 +187,14 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
         <?php endif; ?>
 
       </div>
-      <?php endforeach; ?>
+      <?php endforeach; endif; ?>
     </div>
 
     <!-- Grand total summary -->
     <div class="cart-summary">
       <div class="summary-row">
         <div class="label">Items in cart</div>
-        <div class="value"><?= count($cartItems) ?></div>
+        <div class="value"><?= $displayItemCount ?></div>
       </div>
 
       <div class="summary-total">
@@ -208,7 +206,7 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
     <!-- Final actions -->
     <div class="actions">
       <!-- Checkout all items -->
-      <form action="checkout.php" method="post" style="flex:1 1 auto; min-width:180px;">
+      <form action="checkout.php" method="post" id="checkoutForm" style="flex:1 1 auto; min-width:180px;">
         <!-- Send primitive fields only -->
         <input type="hidden" name="grand_total" value="<?= e($grandTotalRaw) ?>">
 
@@ -312,5 +310,20 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
     </div>
   </div>
 </footer>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+  const checkoutForm = document.getElementById("checkoutForm");
+  if (!checkoutForm) return;
+
+  checkoutForm.addEventListener("submit", function(e) {
+    // PHP passes this value into JS safely
+    const cartEmpty = <?= empty($nonEmptyItems) ? 'true' : 'false' ?>;
+    if (cartEmpty) {
+      e.preventDefault(); // stop form submission
+      alert("No items in cart. Please add tickets before checking out.");
+    }
+  });
+});
+  </script>
 </body>
 </html>

@@ -140,7 +140,7 @@ function toggleCardDetails() {
     <div class="order-item">
       <div class="order-headline">
         <div>
-          <p class="movie-title"><?php echo e($movie_title); ?></p>
+          <p class="white-movie-title"><?php echo e($movie_title); ?></p>
           <div class="meta-line">
             <span>📅 <?php echo e($show_date); ?></span>
             <span>🕒 <?php echo e($timeslot12); ?></span>

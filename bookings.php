@@ -111,10 +111,9 @@ function e($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
         .cart-items-list{display:grid;grid-template-columns:1fr;gap:1rem;}
         @media(min-width:760px){.cart-items-list{grid-template-columns:1fr 1fr;}}
         .order-item{background:#0f172a;border:1px solid #334155;border-radius:12px;padding:1rem;color:#e2e8f0;}
-        .movie-title{font-size:1.1rem;margin:0 0 .25rem;}
         .meta-line{font-size:.85rem;color:#94a3b8;margin:.25rem 0;}
         .seat-line{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.35rem;}
-        .seat-chip{background:#111827;border:1px solid #475569;border-radius:999px;padding:.25rem .6rem;font-family:ui-monospace,Menlo,monospace;font-size:.85rem;}
+        .seat-chip{background:#fff;border:1px solid #475569;border-radius:999px;padding:.25rem .6rem;font-family:ui-monospace,Menlo,monospace;font-size:.85rem;}
         .summary-row{display:flex;justify-content:space-between;align-items:center;margin-top:.6rem;}
         .summary-total{font-weight:700;}
         .actions{margin-top:.8rem;display:flex;gap:.5rem;}
@@ -177,7 +176,7 @@ function e($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
             <div class="cart-items-list">
                 <?php foreach ($groups as $g): ?>
                 <article class="order-item">
-                <h3 class="movie-title"><?= e($g['MovieTitle']) ?></h3>
+                <h3 class="white-movie-title"><?= e($g['MovieTitle']) ?></h3>
                 <div class="meta-line">Order #<?= e($g['OrderID']) ?> • Purchased <?= e(date('j M Y, g:i A', strtotime($g['CreatedAt']))) ?></div>
                 <div class="meta-line">Date: <?= e(fmt_date($g['ShowDate'])) ?> • Time: <?= e(fmt_time($g['TimeSlot'])) ?> • Hall: <?= e($g['HallID']) ?></div>
 
