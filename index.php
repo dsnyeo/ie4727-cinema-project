@@ -22,7 +22,7 @@ $sql_now = "SELECT
             FROM movies
             WHERE Trending = 1
             ORDER BY ReleaseDate DESC
-            LIMIT 6";
+            LIMIT 12";
 
 $res_now = $dbcnx->query($sql_now);
 $now_movies = $res_now && $res_now->num_rows > 0 ? $res_now->fetch_all(MYSQLI_ASSOC) : [];
@@ -42,7 +42,7 @@ $sql_old = "SELECT
             FROM movies
             WHERE Trending = 0
             ORDER BY ReleaseDate DESC
-            LIMIT 6";
+            LIMIT 12";
 
 $res_old = $dbcnx->query($sql_old);
 $old_movies = $res_old && $res_old->num_rows > 0 ? $res_old->fetch_all(MYSQLI_ASSOC) : [];
