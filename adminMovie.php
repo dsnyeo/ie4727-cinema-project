@@ -115,6 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'updat
     }
 }
 
+
 /* --- FETCH SELECTED MOVIE DETAILS FOR FORM --- */
 $selected = null;
 if ($selectedCode !== '') {
@@ -190,25 +191,14 @@ if ($selectedCode !== '') {
       color:#9a9ab5;
       font-size:.9rem;
     }
-    .btn {
-      display:inline-block;
-      padding:.45rem .9rem;
-      border-radius:6px;
-      border:none;
-      cursor:pointer;
-      font-size:.85rem;
-      text-decoration:none;
-    }
-    .btn-outline {
-      border:1px solid #555;
-      color:#ddd;
-      background:transparent;
-    }
+
+
     .btn-primary {
       background:#f5b301;
       color:#111;
       font-weight:600;
     }
+
     .msg, .err {
       padding:.6rem .9rem;
       border-radius:8px;
@@ -262,10 +252,13 @@ if ($selectedCode !== '') {
       font-size:.75rem;
     }
     .movie-item span.badge-mini {
-      font-size:.65rem;
-      padding:.05rem .3rem;
-      border-radius:999px;
-      border:1px solid #3a3a5c;
+      font-size: .65rem;
+    padding: .1rem .4rem;
+    border-radius: 999px;
+    border: 1px solid #3a3a5c;
+    white-space: nowrap;          /* <— Prevents text split */
+    display: inline-block;        /* <— Ensures it's treated as a single unit */
+    line-height: 1;
     }
     .movie-item.now span.badge-mini {
       color:#0fd4a3;
@@ -336,7 +329,7 @@ if ($selectedCode !== '') {
       </p>
     </div>
     <div>
-      <a href="index.php" class="btn btn-outline">← Back to Site</a>
+      <a href="logout.php" class="btn btn-outline">Log Out</a>
     </div>
   </div>
 
@@ -470,7 +463,6 @@ if ($selectedCode !== '') {
           <div style="margin-top:.85rem;">
             <button type="submit" class="btn btn-primary">Save Changes</button>
           </div>
-        </form>
       <?php endif; ?>
     </div>
   </div>

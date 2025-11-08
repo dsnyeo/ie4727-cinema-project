@@ -11,37 +11,34 @@ if (isset($_POST['login'])) {
         exit;
     }
 
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    // $password = md5($password); // Uncomment once register.php hashes passwords
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+    // $password = md5($password); // uncomment if registration hashes passwords
 
-    $query = "SELECT * FROM users WHERE Username='" . $dbcnx->real_escape_string($username) . "' 
-              AND UserPassword='" . $dbcnx->real_escape_string($password) . "'";
-
-    $result = $dbcnx->query($query);
+    // --- Prepare statement for security ---
+    if (!($stmt = $dbcnx->prepare("SELECT UserID, Username, UserPassword, Email FROM users WHERE Username = ? AND UserPassword = ? LIMIT 1"))) {
+        die("Database error: " . $dbcnx->error);
+    }
+    $stmt->bind_param("ss", $username, $password);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
     if ($result && $result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $dbusername = $row['Username'];
-        $dbpassword = $row['UserPassword'];
-        $dbuserID   = $row['UserID'];
-        $dbuserEmail= $row['Email'];
+        session_start();
+        $_SESSION['sess_user'] = $row['Username'];
+        $_SESSION['sess_user_id'] = $row['UserID'];
+        $_SESSION['sess_user_email'] = $row['Email'];
 
-        if ($username === $dbusername && $password === $dbpassword) {
-            session_start();
-            $_SESSION['sess_user'] = $username;
-            $_SESSION['sess_user_id'] = $dbuserID;
-            $_SESSION['sess_user_email'] = $dbuserEmail;
-
-            header("Location: index.php");
-            exit;
-        } else {
-            echo "<script>
-                    alert('Login failed. Please try again.');
-                    window.location.href = 'login-main.php';
-                  </script>";
+        // ✅ If username is admin → redirect to admin page
+        if (strtolower($row['Username']) === 'admin') {
+            header("Location: adminMovie.php");
             exit;
         }
+
+        // ✅ Otherwise normal user → go home
+        header("Location: index.php");
+        exit;
     } else {
         echo "<script>
                 alert('Login failed. Please try again.');
