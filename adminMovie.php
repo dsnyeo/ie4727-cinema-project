@@ -157,6 +157,54 @@ if ($selectedCode !== '') {
       background:#05060a;
       color:#f5f5f5;
     }
+
+/* === Admin Navigation Bar === */
+.admin-nav {
+  background: #0c0c14;
+  border-bottom: 1px solid #2c2c3e;
+  padding: 0.6rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.admin-nav-container {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-brand {
+  font-size: 1.1rem;
+  color: #f5b301;
+  letter-spacing: .04em;
+}
+
+.admin-links a {
+  margin-left: 1.2rem;
+  color: #cfd0e0;
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.admin-links a:hover {
+  color: #fff;
+  background: #2a2a44;
+}
+
+.admin-links a.active {
+  color: #111;
+  background: #f5b301;
+  font-weight: 600;
+}
+
+
     .admin-wrapper {
       max-width: 1150px;
       margin: 2rem auto;
@@ -316,6 +364,19 @@ if ($selectedCode !== '') {
   </style>
 </head>
 <body>
+<!-- Admin Navigation Bar -->
+<header class="admin-nav">
+  <div class="admin-nav-container">
+    <div class="admin-brand">
+      <strong>CineLux</strong> Admin Panel
+    </div>
+    <nav class="admin-links">
+      <a href="adminMovies.php" class="<?= basename($_SERVER['PHP_SELF']) === 'adminMovie.php' ? 'active' : '' ?>">Movies</a>
+      <a href="adminReport.php" class="<?= basename($_SERVER['PHP_SELF']) === 'adminReport.php' ? 'active' : '' ?>">Reports</a>
+      <a href="logout.php"class="btn btn-outline" onclick="return confirm('Log out of admin panel?');">Logout</a>
+    </nav>
+  </div>
+</header>
 
 <div class="admin-wrapper">
   <div class="admin-header">
@@ -328,9 +389,7 @@ if ($selectedCode !== '') {
         or <strong>OLDER MOVIES</strong> (Trending = 0) on the homepage.
       </p>
     </div>
-    <div>
-      <a href="logout.php" class="btn btn-outline">Log Out</a>
-    </div>
+
   </div>
 
   <?php foreach ($messages as $m): ?>
