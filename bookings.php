@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 if (!isset($_SESSION['user_id']) && !isset($_SESSION['sess_user'])) {
@@ -40,6 +39,44 @@ if (!isset($dbcnx) || !($dbcnx instanceof mysqli)) {
 }
 
 $userId = (int)$_SESSION['user_id'];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_order_id'])) {
+  $orderId = (int)$_POST['cancel_order_id'];
+  $error = $success = null;
+
+  if ($orderId <= 0 || $userId <= 0) {
+    $error = 'Invalid request.';
+  } else {
+    $sqlCheck = "SELECT 1 FROM bookings WHERE OrderID = ? AND UserID = ? LIMIT 1";
+    if ($stmt = $dbcnx->prepare($sqlCheck)) {
+      $stmt->bind_param('ii', $orderId, $userId);
+      $stmt->execute();
+      $stmt->store_result();
+      if ($stmt->num_rows === 0) {
+        $error = 'Booking not found or not permitted.';
+      }
+      $stmt->close();
+    } else {
+      $error = 'Could not prepare statement.';
+    }
+
+    if (!$error) {
+      $dbcnx->begin_transaction();
+      try {
+        if ($del = $dbcnx->prepare("DELETE FROM bookings WHERE OrderID = ? AND UserID = ?")) {
+          $del->bind_param('ii', $orderId, $userId);
+          $del->execute();
+          $del->close();
+        }
+        $dbcnx->commit();
+        $success = 'Booking cancelled.';
+      } catch (Throwable $e) {
+        $dbcnx->rollback();
+        $error = 'Failed to cancel booking.';
+      }
+    }
+  }
+}
 
 $sql = "
   SELECT
@@ -119,27 +156,45 @@ function e($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
         .actions{margin-top:.8rem;display:flex;gap:.5rem;}
         .btn-main{background:#22c55e;border:1px solid #16a34a;border-radius:10px;color:#052e16;padding:.55rem .8rem;text-decoration:none;}
         .btn-ghost{background:transparent;border:1px solid #334155;border-radius:10px;color:#e2e8f0;padding:.55rem .8rem;text-decoration:none;}
+        .btn-danger{
+          background:#ef4444;
+          border:1px solid #b91c1c;
+          border-radius:10px;
+          color:#fff;
+          padding:.55rem .8rem;
+          text-decoration:none;
+          cursor:pointer;
+        }
+        .btn-danger:hover{ filter:brightness(0.95); }
+
         .empty{color:#94a3b8;text-align:center;padding:2.5rem 1rem;}
     </style>
 </head>
 <body>
+  <?php if (!empty($success)): ?>
+    <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+  <?php elseif (!empty($error)): ?>
+    <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+  <?php endif; ?>
     <header>
         <div id="wrapper">
         <div class="container header_bar">
             <a class="brand" href="index.php">
-            <span class="brand_logo" img src="./images/cinema_logo.png"></span>
-            <span class="brand_text">
-                <strong>CineLux</strong><br />
-                <span>Theatre</span>
-            </span>
-            </a>
+          <span class="brand_logo">
+            <img src="./images/cinema_logo.png" alt="Cinema Logo" >
+          </span>
+          <span class="brand_text">
+            <strong>CineLux</strong><br />
+            <span>Theatre</span>
+          </span>
+        </a>
 
         <div id="main_nav">
             <nav>
                 <ul>
                 <li><a href="#">PROMOTIONS</a></li>
                 <li><a href="bookings.php">BOOKINGS</a></li>
-                <li><a href="#">PROFILE</a></li>
+                <li><a href="profile.php">PROFILE</a></li>
                 </ul>
             </nav>
         </div>
@@ -193,8 +248,11 @@ function e($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
             </div>
 
             <div class="actions">
-                <a class="btn-ghost" href="moviedetails.php?id=<?= urlencode($g['MovieCode']) ?>">View Details</a>
-                <a class="btn-main" href="index.php">Book Another</a>
+              <form method="post" style="display:inline;" onsubmit="return confirm('Cancel this booking? This cannot be undone.');">
+                <input type="hidden" name="cancel_order_id" value="<?= e($g['OrderID']) ?>">
+                <button type="submit" class="btn-danger">Cancel Booking</button>
+              </form>
+              <a class="btn-main" href="index.php">Book Another</a>
             </div>
         </article>
         <?php endforeach; ?>
@@ -239,28 +297,6 @@ function e($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
     </a>
   </li>
 </ul>
-    </div>
-
-    <div class="footer_panel right">
-      <div class="panel_title">SUPPORTED PAYMENT</div>
-<ul class="icon_list" aria-label="Payment">
-  <li>
-    <a href="#" class="icon_btn">
-      <img src="./images/visa.svg" alt="visa" >
-    </a>
-  </li>
-  <li>
-    <a href="#" class="icon_btn" aria-label="mastercard">
-      <img src="./images/mastercard.svg" alt="mastercard">
-    </a>
-  </li>
-  <li>
-    <a href="#" class="icon_btn" aria-label="cash">
-      <img src="./images/cash.svg" alt="cash">
-    </a>
-  </li>
-</ul>
-    <small>Credit/Debit Cards and Cash are welcomed</small>
     </div>
   </div>
 </footer>

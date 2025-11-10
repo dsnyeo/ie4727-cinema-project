@@ -25,25 +25,27 @@ if ($flash) {
   <header>
     <div id="wrapper">
     <div class="container header_bar">
-      <a class="brand" href="index.php"> 
-        <span class="brand_logo" img src="./images/cinema_logo.png"></span>
-        <span class="brand_text">
-          <strong>CineLux</strong><br />
-          <span>Theatre</span>
-        </span>
-      </a>
+      <a class="brand" href="index.php">
+          <span class="brand_logo">
+            <img src="./images/cinema_logo.png" alt="Cinema Logo" >
+          </span>
+          <span class="brand_text">
+            <strong>CineLux</strong><br />
+            <span>Theatre</span>
+          </span>
+        </a>
       
       <div id="main_nav">
       <nav>
         <ul>
           <li><a href="#">PROMOTIONS</a></li>
           <li><a href="bookings.php">BOOKINGS</a></li>
-          <li><a href="#">PROFILE</a></li>
+          <li><a href="profile.php">PROFILE</a></li>
         </ul>
       </nav>
       </div>
 
-      <a class="btn btn_ghost" href="#">LOGIN</a>
+      <a class="btn btn_ghost" href="login-main.php">LOGIN</a>
     </div>
     </div>
   </header>

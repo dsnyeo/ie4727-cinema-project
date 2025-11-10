@@ -77,7 +77,7 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
             <ul>
               <li><a href="#">PROMOTIONS</a></li>
               <li><a href="bookings.php">BOOKINGS</a></li>
-              <li><a href="#">PROFILE</a></li>
+              <li><a href="profile.php">PROFILE</a></li>
             </ul>
           </nav>
         </div>

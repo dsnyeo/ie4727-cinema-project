@@ -78,8 +78,10 @@ $st->close();
   <header>
     <div id="wrapper">
       <div class="container header_bar">
-        <a class="brand" href="index.php" >
-          <span class="brand_logo" img src="./images/cinema_logo.png"></span>
+        <a class="brand" href="index.php">
+          <span class="brand_logo">
+            <img src="./images/cinema_logo.png" alt="Cinema Logo" >
+          </span>
           <span class="brand_text">
             <strong>CineLux</strong><br />
             <span>Theatre</span>
@@ -91,7 +93,7 @@ $st->close();
             <ul>
               <li><a href="#">PROMOTIONS</a></li>
               <li><a href="bookings.php">BOOKINGS</a></li>
-              <li><a href="#">PROFILE</a></li>
+              <li><a href="profile.php">PROFILE</a></li>
             </ul>
           </nav>
         </div>

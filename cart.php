@@ -100,11 +100,13 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
   <header>
     <div id="wrapper">
       <div class="container header_bar">
-        <a class="brand" href="#">
-          <span class="brand_logo">🎬</span>
+        <a class="brand" href="index.php">
+          <span class="brand_logo">
+            <img src="./images/cinema_logo.png" alt="Cinema Logo" >
+          </span>
           <span class="brand_text">
-            <strong>CINEMA</strong><br />
-            <span>NAME</span>
+            <strong>CineLux</strong><br />
+            <span>Theatre</span>
           </span>
         </a>
 
@@ -113,7 +115,7 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
             <ul>
               <li><a href="#">PROMOTIONS</a></li>
               <li><a href="bookings.php">BOOKINGS</a></li>
-              <li><a href="#">PROFILE</a></li>
+              <li><a href="profile.php">PROFILE</a></li>
             </ul>
           </nav>
         </div>
