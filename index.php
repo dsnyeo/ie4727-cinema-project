@@ -63,7 +63,9 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
     <div id="wrapper">
       <div class="container header_bar">
         <a class="brand" href="index.php">
-          <span class="brand_logo" img src="./images/cinema_logo.png"></span>
+          <span class="brand_logo">
+            <img src="./images/cinema_logo.png" alt="Cinema Logo" >
+          </span>
           <span class="brand_text">
             <strong>CineLux</strong><br />
             <span>Theatre</span>
