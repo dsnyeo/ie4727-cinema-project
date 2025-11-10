@@ -164,7 +164,7 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
   <div class="container footer_links">
     <a href="index.php">HOME</a>
     <a href="#">CONTACT US</a>
-    <a href="jobs.php">JOBS AT CineLux Theatre</a>
+    <a href="jobs.php">JOBS @ CineLux Theatre</a>
   </div>
 
   <!-- thin line across the container -->

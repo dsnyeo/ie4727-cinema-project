@@ -148,7 +148,9 @@ try {
       ($paymentMethod==='card' && $cardLast4 
           ? '<p>Paid by card • **** **** **** '.e($cardLast4).'</p>'
           : '<p>Payment method: '.e(strtoupper($paymentMethod)).'</p>').
-      '<p style="margin-top:12px">Enjoy your movie! 🎬</p>
+      '<p style="margin-top:12px">Enjoy your movie!</p>
+      <p>You have received a promo code: SEC0ND1</p>
+      <p>Use it on your second checkout!</p>
     </div>';
 
     $headers  = "From: {$from}{$EOL}Reply-To: {$from}{$EOL}";
@@ -158,7 +160,7 @@ try {
 
     // 7) Redirect with popup
     echo "<script>
-            alert('✅ Booking successful! Confirmation email has been sent to {$custEmail}.');
+            alert('Booking is successful! Confirmation email has been sent to {$custEmail}.');
             window.location.href = 'index.php?order_id={$orderId}';
           </script>";
     exit;
