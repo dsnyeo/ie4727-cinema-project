@@ -164,6 +164,7 @@ svg#lineChart {
     <nav class="admin-links">
       <a href="adminMovie.php">Movies</a>
       <a href="adminReport.php" class="active">Reports</a>
+      <a href="adminScreentime.php">Screentime</a>
       <a href="logout.php" onclick="return confirm('Log out of admin panel?');">Logout</a>
     </nav>
   </div>

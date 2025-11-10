@@ -42,27 +42,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Checkout</title>
 <link rel="stylesheet" href="styles.css" />
-
-<script>
-// toggle credit card fields based on radio select
-function toggleCardDetails() {
-  const cardBox = document.getElementById('cardBox');
-  const cardRadio = document.getElementById('pay_card');
-  if (cardRadio.checked){
-    cardBox.style.display = 'block';
-    // make card inputs required when card is selected
-    document.querySelectorAll('.cardBox-required').forEach(inp=>{
-      inp.required = true;
-    });
-  } else {
-    cardBox.style.display = 'none';
-    document.querySelectorAll('.cardBox-required').forEach(inp=>{
-      inp.required = false;
-    });
-  }
-}
-</script>
-
 </head>
 <body>
 <!-- Header -->
@@ -187,11 +166,55 @@ function toggleCardDetails() {
       <input type="hidden" name="item[<?php echo $i; ?>][seats]" value="<?php echo e($seatCSV); ?>">
     </div>
     <?php endforeach; ?>
+    
+  <div class="promo-box">
+    <label for="promo_code" class="form-label">
+      Have a promo code?
+    </label>
+    <div class="promo-row">
+      <input type="text"
+            id="promo_code"
+            class="form-input"
+            placeholder="Enter code (e.g. MOVIE10)">
+      <button type="button"
+              class="btn-ghost"
+              onclick="applyPromo()">
+        Apply
+      </button>
+    </div>
+    <div id="promo_message" class="promo-message"></div>
+  </div>
+
 
     <div class="grand-total-box">
-      <div class="label">Grand Total</div>
-      <div class="value">$<?php echo $grandTotalFmt; ?></div>
+    <div class="label">Grand Total</div>
+    <div class="value" id="grand_total_display"
+        style="display:flex;align-items:baseline;gap:.6rem;">
+        
+      <!-- Original price (normal by default, struck when discounted) -->
+      <span id="grand_total_original"
+            style="font-size:1.1rem;font-weight:600;color:#e5e7eb;">
+        $<?php echo $grandTotalFmt; ?>
+      </span>
+
+      <!-- Discounted price (hidden until promo applied) -->
+      <span id="grand_total_discounted"
+            style="display:none;font-size:1.25rem;font-weight:700;color:#22c55e;">
+      </span>
     </div>
+  </div>
+
+  <input type="hidden"
+        id="grand_total_input"
+        name="grand_total"
+        value="<?php echo e($grandTotalRaw); ?>">
+
+  <input type="hidden"
+        id="promo_code_input"
+        name="applied_promo"
+        value="">
+
+
 
     <input type="hidden" name="grand_total" value="<?php echo e($grandTotalRaw); ?>">
   </section>
@@ -397,9 +420,98 @@ function toggleCardDetails() {
   </div>
 </footer>
 <script>
-// run once on load to ensure cardBox hidden/required state matches default radio
-toggleCardDetails();
+function toggleCardDetails() {
+  const cardBox = document.getElementById('cardBox');
+  const cardRadio = document.getElementById('pay_card');
+  if (cardRadio && cardRadio.checked){
+    cardBox.style.display = 'block';
+    document.querySelectorAll('.cardBox-required').forEach(inp=>{
+      inp.required = true;
+    });
+  } else {
+    cardBox.style.display = 'none';
+    document.querySelectorAll('.cardBox-required').forEach(inp=>{
+      inp.required = false;
+    });
+  }
+}
+
+// ===== Promo logic =====
+const BASE_TOTAL = <?php echo json_encode((float)$grandTotalRaw); ?>;
+let currentTotal = BASE_TOTAL;
+
+function applyPromo() {
+  const input        = document.getElementById('promo_code');
+  const msgEl        = document.getElementById('promo_message');
+  const originalEl   = document.getElementById('grand_total_original');
+  const discountedEl = document.getElementById('grand_total_discounted');
+  const totalInput   = document.getElementById('grand_total_input');
+  const promoHidden  = document.getElementById('promo_code_input');
+
+  const rawCode = (input.value || '').trim();
+  const code = rawCode.toUpperCase();
+
+  // reset message
+  msgEl.textContent = '';
+  msgEl.style.color = '#9ca3af';
+
+  // helper: reset to no-discount state
+  function resetTotal() {
+    currentTotal = BASE_TOTAL;
+    originalEl.textContent = '$' + BASE_TOTAL.toFixed(2);
+    originalEl.style.textDecoration = 'none';
+    originalEl.style.color = '#e5e7eb';
+    discountedEl.style.display = 'none';
+    discountedEl.textContent = '';
+    totalInput.value = BASE_TOTAL.toFixed(2);
+    promoHidden.value = '';
+  }
+
+  if (!code) {
+    resetTotal();
+    msgEl.textContent = 'Please enter a promo code.';
+    return;
+  }
+
+  let newTotal = BASE_TOTAL;
+  let message = '';
+
+  // =============================
+  // PROMO RULES
+  // =============================
+  if (code === 'SEC0ND1') {
+    newTotal = BASE_TOTAL * 0.80; // 20% OFF
+    message = 'Promo applied: 20% off (SEC0ND1).';
+  } else {
+    // invalid: revert UI
+    resetTotal();
+    msgEl.textContent = 'Invalid or expired promo code.';
+    msgEl.style.color = '#f97316';
+    return;
+  }
+
+  // apply discount UI
+  currentTotal = newTotal;
+  originalEl.textContent = '$' + BASE_TOTAL.toFixed(2);
+  originalEl.style.textDecoration = 'line-through';
+  originalEl.style.color = '#9ca3af';
+
+  discountedEl.textContent = '$' + newTotal.toFixed(2);
+  discountedEl.style.display = 'inline';
+
+  totalInput.value = newTotal.toFixed(2);
+  promoHidden.value = code;
+
+  msgEl.textContent = message;
+  msgEl.style.color = '#22c55e';
+}
+
+// init on load
+document.addEventListener('DOMContentLoaded', function() {
+  toggleCardDetails();
+});
 </script>
+
 
 </body>
 </html>

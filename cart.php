@@ -13,12 +13,60 @@ if (empty($_SESSION['booking'])) {
 
 // cart must exist AND be an array
 if (empty($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
-    header("Location: seat_booking.php");
-    exit;
+    $_SESSION['cart'] = [];
 }
 
-$cartItems = $_SESSION['cart']; // array of ticket groups
+$cartItems = $_SESSION['cart']; // raw items from session
 $PRICE_PER_SEAT = 8.00;
+
+/**
+ * Merge items that refer to the same show:
+ * same movie_id, hall_id, show_date, timeslot.
+ */
+$merged = [];
+
+foreach ($cartItems as $ci) {
+    $movie_id    = $ci['movie_id']    ?? '';
+    $movie_title = $ci['movie_title'] ?? '';
+    $hall_id     = $ci['hall_id']     ?? '';
+    $show_date   = $ci['show_date']   ?? '';
+    $timeslot    = $ci['timeslot']    ?? '';   // use 24h as canonical
+    $timeslot12  = $ci['timeslot12']  ?? '';
+    $seats       = (isset($ci['seats']) && is_array($ci['seats'])) ? $ci['seats'] : [];
+
+    // skip broken/empty entries
+    if (!$movie_id || !$show_date || !$timeslot || empty($seats)) {
+        continue;
+    }
+
+    // unique key for a showtime
+    $key = implode('|', [$movie_id, $hall_id, $show_date, $timeslot]);
+
+    if (!isset($merged[$key])) {
+        $merged[$key] = [
+            'movie_id'    => $movie_id,
+            'movie_title' => $movie_title,
+            'hall_id'     => $hall_id,
+            'show_date'   => $show_date,
+            'timeslot'    => $timeslot,
+            'timeslot12'  => $timeslot12,
+            'seats'       => [],
+        ];
+    }
+
+    // merge seats & remove duplicates
+    $merged[$key]['seats'] = array_values(array_unique(
+        array_merge($merged[$key]['seats'], $seats)
+    ));
+}
+
+// use merged items everywhere below
+$cartItems = array_values($merged);
+
+// optional: keep session clean so other pages also see merged version
+$_SESSION['cart'] = $cartItems;
+
+
 
 // compute grand total safely
 $grandTotalRaw = 0;
@@ -102,9 +150,9 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
     <div class="cart-items-list">
       <?php
   // filter out any empty entries
-  $nonEmptyItems = array_filter($cartItems, function($ci){
+    $nonEmptyItems = array_values(array_filter($cartItems, function($ci){
       return !empty($ci['seats']) && is_array($ci['seats']) && count($ci['seats']) > 0;
-  });
+  }));
 
   if (empty($nonEmptyItems)): ?>
       <div class="cart-empty">

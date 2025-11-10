@@ -22,6 +22,15 @@ $grandTotal    = (float) $_POST['grand_total'];
 $userId        = $_SESSION['sess_user_id'] ?? null;
 if ($grandTotal < 0) $grandTotal = 0;
 
+// Apply promo code (server-side check)
+$promoCode = strtoupper(trim($_POST['applied_promo'] ?? ''));
+
+if ($promoCode === 'SEC0ND1') {
+    $grandTotal = $grandTotal * 0.80; // 20% off
+}
+
+$grandTotal = round($grandTotal, 2);
+
 // Optional: last4
 $cardLast4 = null;
 if ($paymentMethod === 'card') {

@@ -373,6 +373,7 @@ if ($selectedCode !== '') {
     <nav class="admin-links">
       <a href="adminMovies.php" class="<?= basename($_SERVER['PHP_SELF']) === 'adminMovie.php' ? 'active' : '' ?>">Movies</a>
       <a href="adminReport.php" class="<?= basename($_SERVER['PHP_SELF']) === 'adminReport.php' ? 'active' : '' ?>">Reports</a>
+      <a href="adminScreentime.php" class="<?= basename($_SERVER['PHP_SELF']) === 'adminScreentime.php' ? 'active' : '' ?>">Screentime</a>
       <a href="logout.php"class="btn btn-outline" onclick="return confirm('Log out of admin panel?');">Logout</a>
     </nav>
   </div>
