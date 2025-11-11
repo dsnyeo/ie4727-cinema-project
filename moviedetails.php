@@ -44,6 +44,8 @@ $movie = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
 if (!$movie) die("Movie not found.");
+$_SESSION['ticket_price'] = $movie['ticket_price'];
+
 
 $sqlSlots = "SELECT 
     TIME_FORMAT(timeslot,'%H:%i:%s') AS time_24,

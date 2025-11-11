@@ -5,19 +5,14 @@ include "dbconnect.php";
 
 function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
 
-// booking info (movie title etc. lives here for convenience)
-if (empty($_SESSION['booking'])) {
-    header("Location: index.php");
-    exit;
-}
-
 // cart must exist AND be an array
 if (empty($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
 $cartItems = $_SESSION['cart']; // raw items from session
-$PRICE_PER_SEAT = 8.00;
+
+$PRICE_PER_SEAT = $_SESSION['ticket_price'];
 
 /**
  * Merge items that refer to the same show:

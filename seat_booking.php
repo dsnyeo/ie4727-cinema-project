@@ -296,7 +296,7 @@ foreach ($rows as $r) {
         font-size:0.95rem;
         line-height:1.2;
       ">
-      Add to Cart
+      Confirm Seat
     </button>
   </form>
 </div>

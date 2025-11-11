@@ -15,7 +15,8 @@ if (empty($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
 }
 
 $cartItems = $_SESSION['cart'];
-$PRICE_PER_SEAT = 8.00;
+$PRICE_PER_SEAT = $_SESSION['ticket_price'];
+
 
 
 

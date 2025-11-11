@@ -203,8 +203,6 @@ if ($selectedCode !== '') {
   background: #f5b301;
   font-weight: 600;
 }
-
-
     .admin-wrapper {
       max-width: 1150px;
       margin: 2rem auto;
