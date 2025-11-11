@@ -166,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     input[type="text"],input[type="email"],input[type="password"]{
       width:100%;background:#0b1220;border:1px solid #334155;color:#e2e8f0;padding:.75rem .85rem;border-radius:12px;outline:none;
     }
-    input::placeholder{color:#6b7280;}
+    input::placeholder{color:#fff; opacity:1;}
     .hint{color:#94a3b8;font-size:.85rem;margin-top:.25rem;}
     .actions{display:flex;gap:.75rem;margin-top:1.25rem;align-items:stretch;}
     .btn-main,.btn-ghost{

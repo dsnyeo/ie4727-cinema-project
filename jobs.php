@@ -1,14 +1,14 @@
 <?php
 @include "dbconnect.php";
-if (session_status() === PHP_SESSION_NONE) { session_start(); }
-if (!function_exists('e')) { function e($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); } }
+if (session_status() === PHP_SESSION_NONE) {session_start();}
+if (!function_exists('e')) {function e($s){return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');}}
 
 $errors = [];
-$saved  = false;
+$saved = false;
 
-function name_ok($v){ return preg_match('/^[A-Za-z ]+$/', trim($v ?? '')); }
-function email_ok($v){ return filter_var(trim($v ?? ''), FILTER_VALIDATE_EMAIL); }
-function exp_ok($v){ return mb_strlen(trim($v ?? '')) >= 20; }
+function name_ok($v){return preg_match('/^[A-Za-z ]+$/', trim($v ?? ''));}
+function email_ok($v){return filter_var(trim($v ?? ''), FILTER_VALIDATE_EMAIL);}
+function exp_ok($v){return mb_strlen(trim($v ?? '')) >= 20;}
 function start_ok($iso){
   if (!$iso) return false;
   $today = new DateTime('today');
@@ -18,31 +18,60 @@ function start_ok($iso){
 function bday_ok($iso){
   if (!$iso) return false;
   $bday = DateTime::createFromFormat('Y-m-d', $iso);
-  $min  = new DateTime('-18 years');
+  $min = new DateTime('-18 years');
   return $bday && $bday <= $min;
 }
 
-$Name = $_POST['Name'] ?? '';
-$Email = $_POST['Email'] ?? '';
-$StartDate = $_POST['StartDate'] ?? '';
-$Birthday = $_POST['Birthday'] ?? '';
+$prefillNameFromDB = '';
+$prefillEmailFromDB = '';
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' && isset($dbcnx) && !$dbcnx->connect_errno) {
+  if (isset($_SESSION['sess_user']) || isset($_SESSION['user_id'])) {
+    if (!isset($_SESSION['user_id']) && isset($_SESSION['sess_user'])) {
+      if ($stmt = $dbcnx->prepare('SELECT UserID FROM users WHERE Username = ? LIMIT 1')) {
+        $stmt->bind_param('s', $_SESSION['sess_user']);
+        $stmt->execute();
+        $stmt->bind_result($uid);
+        if ($stmt->fetch()) $_SESSION['user_id'] = (int)$uid;
+        $stmt->close();
+      }
+    }
+    if (isset($_SESSION['user_id'])) {
+      $uid = (int)$_SESSION['user_id'];
+      if ($stmt = $dbcnx->prepare('SELECT FirstName, LastName, Email FROM users WHERE UserID = ? LIMIT 1')) {
+        $stmt->bind_param('i', $uid);
+        $stmt->execute();
+        $stmt->bind_result($first, $last, $email);
+        if ($stmt->fetch()) {
+          $prefillNameFromDB = trim(($first ?? '') . ' ' . ($last ?? ''));
+          $prefillEmailFromDB = (string)$email;
+        }
+        $stmt->close();
+      }
+    }
+  }
+}
+
+$Name = ($_SERVER['REQUEST_METHOD'] === 'POST') ? ($_POST['Name'] ?? ''): $prefillNameFromDB;
+$Email = ($_SERVER['REQUEST_METHOD'] === 'POST') ? ($_POST['Email'] ?? ''): $prefillEmailFromDB;
+$StartDate = $_POST['StartDate']  ?? '';
+$Birthday = $_POST['Birthday']   ?? '';
 $Experience = $_POST['Experience'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  if (!trim($Name))                 $errors['Name'] = 'Name cannot be left blank.';
-  elseif (!name_ok($Name))          $errors['Name'] = 'Your name should only contain alphabet and space characters.';
+  if (!trim($Name)) $errors['Name'] = 'Name cannot be left blank.';
+  elseif (!name_ok($Name)) $errors['Name'] = 'Your name should only contain alphabet and space characters.';
 
-  if (!trim($Email))                $errors['Email'] = 'Email cannot be left blank.';
-  elseif (!email_ok($Email))        $errors['Email'] = 'Please enter a valid email address.';
+  if (!trim($Email)) $errors['Email'] = 'Email cannot be left blank.';
+  elseif (!email_ok($Email)) $errors['Email'] = 'Please enter a valid email address.';
 
-  if (!$StartDate)                  $errors['StartDate'] = 'Please pick a start date.';
-  elseif (!start_ok($StartDate))    $errors['StartDate'] = 'Your start date cannot be today or a past date.';
+  if (!$StartDate) $errors['StartDate'] = 'Please pick a start date.';
+  elseif (!start_ok($StartDate)) $errors['StartDate'] = 'Your start date cannot be today or a past date.';
 
-  if (!$Birthday)                   $errors['Birthday'] = 'Please enter your birthday.';
-  elseif (!bday_ok($Birthday))      $errors['Birthday'] = 'You must be at least 18 years old to work.';
+  if (!$Birthday) $errors['Birthday'] = 'Please enter your birthday.';
+  elseif (!bday_ok($Birthday)) $errors['Birthday'] = 'You must be at least 18 years old to work.';
 
-  if (!trim($Experience))           $errors['myExperience'] = 'Experience cannot be left blank.';
-  elseif (!exp_ok($Experience))     $errors['myExperience'] = 'Experience must be at least 20 characters long.';
+  if (!trim($Experience)) $errors['myExperience'] = 'Experience cannot be left blank.';
+  elseif (!exp_ok($Experience)) $errors['myExperience'] = 'Experience must be at least 20 characters long.';
 
   if (!$errors) {
     if (!isset($dbcnx) || $dbcnx->connect_errno) {
@@ -73,11 +102,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Jobs at "CINEMA NAME"</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    .field-error { color:#ffb3b3; font-size:12px; margin-top:4px; min-height:14px; }
-    .invalid { border-color:#ad2a2a !important; box-shadow: 0 0 0 2px rgba(173,42,42,0.2); }
-    .notice { padding:12px 14px; border-radius:8px; margin:14px 0; }
-    .notice.ok { background:#0e2a18; color:#b6ffd0; border:1px solid #174d2a; }
-    .notice.err{ background:#2a0000; color:#ffc7c7; border:1px solid #5a1b1b; }
+    .field-error{
+      color:#ffb3b3;
+      font-size:12px;
+      margin-top:4px;
+      min-height:14px;
+    }
+    .invalid{
+      border-color:#ad2a2a !important;
+      box-shadow: 0 0 0 2px rgba(173,42,42,0.2);
+    }
+    .notice{
+      padding:12px 14px;
+      border-radius:8px;
+      margin:14px 0;
+    }
+    .notice.ok{
+      background:#0e2a18;
+      color:#b6ffd0;
+      border:1px solid #174d2a;
+    }
+    .notice.err{
+      background:#2a0000;
+      color:#ffc7c7;
+      border:1px solid #5a1b1b;
+    }
   </style>
 </head>
 <body>
@@ -200,7 +249,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
   </main>
 
-<!-- Footer -->
 <footer class="site_footer">
   <div class="container footer_links">
     <a href="index.php">HOME</a>
@@ -208,37 +256,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <a href="jobs.php">JOBS AT CineLux Theatre</a>
   </div>
 
-  <!-- thin line across the container -->
   <div class="container">
     <hr class="footer_divider" />
   </div>
 
-  <!-- two panels: left = connect, right = payment -->
   <div class="container footer_panels">
     <div class="footer_panel left">
       <div class="panel_title">CONNECT WITH US</div>
 <ul class="icon_list" aria-label="Social links">
   <li>
     <a class="icon_btn">
-      <!-- Facebook / Meta-style "f" -->
       <img src="./images/fb.svg" alt="Facebook" >
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="Twitter / X">
-      <!-- Twitter bird -->
       <img src="./images/x.svg" alt="Twitter | X">
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="Instagram">
-      <!-- Instagram camera -->
       <img src="./images/instagram.svg" alt="Instagram">
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="TikTok">
-      <!-- TikTok note -->
       <img src="./images/tiktok.svg" alt="TikTok">
     </a>
   </li>
@@ -250,19 +292,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <ul class="icon_list" aria-label="Payment">
   <li>
     <a class="icon_btn">
-      <!-- Facebook / Meta-style "f" -->
       <img src="./images/visa.svg" alt="visa" >
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="mastercard">
-      <!-- Twitter bird -->
       <img src="./images/mastercard.svg" alt="mastercard">
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="cash">
-      <!-- Instagram camera -->
       <img src="./images/cash.svg" alt="cash">
     </a>
   </li>
@@ -272,7 +311,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 </footer>
 
-  <!-- Inline real-time validation (register-main style) -->
   <script>
     (function () {
       function setError(input, msg) {
@@ -282,16 +320,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
       function clearError(input) { setError(input, ''); }
 
-      const form         = document.getElementById('jobsform');
-      const Name         = document.getElementById('Name');
-      const Email        = document.getElementById('Email');
-      const StartDate    = document.getElementById('StartDate');
-      const Birthday     = document.getElementById('Birthday');
+      const form = document.getElementById('jobsform');
+      const Name = document.getElementById('Name');
+      const Email = document.getElementById('Email');
+      const StartDate = document.getElementById('StartDate');
+      const Birthday = document.getElementById('Birthday');
       const myExperience = document.getElementById('myExperience');
 
-      const nameOk   = v => /^[A-Za-z ]+$/.test((v||'').trim());
-      const emailOk  = v => /^[A-Za-z0-9._+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/.test((v||'').trim());
-      const expOk    = v => (v||'').trim().length >= 20;
+      const nameOk = v => /^[A-Za-z ]+$/.test((v||'').trim());
+      const emailOk = v => /^[A-Za-z0-9._+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$/.test((v||'').trim());
+      const expOk = v => (v||'').trim().length >= 20;
 
       function startOk(iso){
         if (!iso) return false;
@@ -312,33 +350,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       function vName(){
         const v = Name.value;
-        if (!v.trim())      { setError(Name, 'Name cannot be left blank.'); return false; }
-        if (!nameOk(v))     { setError(Name, 'Your name should only contain alphabet and space characters.'); return false; }
-        clearError(Name); return true;
+        if (!v.trim()){
+          setError(Name, 'Name cannot be left blank.');
+          return false;
+        }
+        if (!nameOk(v)){
+          setError(Name, 'Your name should only contain alphabet and space characters.');
+          return false;
+        }
+        clearError(Name);
+        return true;
       }
       function vEmail(){
         const v = Email.value;
-        if (!v.trim())      { setError(Email, 'Email cannot be left blank.'); return false; }
-        if (!emailOk(v))    { setError(Email, 'Please enter a valid email address.'); return false; }
-        clearError(Email); return true;
+        if (!v.trim()){
+          setError(Email, 'Email cannot be left blank.');
+          return false;
+        }
+        if (!emailOk(v)){
+          setError(Email, 'Please enter a valid email address.');
+          return false;
+        }
+        clearError(Email);
+        return true;
       }
       function vStart(){
         const v = StartDate.value;
-        if (!v)             { setError(StartDate, 'Please pick a start date.'); return false; }
-        if (!startOk(v))    { setError(StartDate, 'Your start date cannot be today or a past date.'); return false; }
-        clearError(StartDate); return true;
+        if (!v){
+          setError(StartDate, 'Please pick a start date.');
+          return false;
+        }
+        if (!startOk(v)){
+          setError(StartDate, 'Your start date cannot be today or a past date.');
+          return false;
+        }
+        clearError(StartDate);
+        return true;
       }
       function vBday(){
         const v = Birthday.value;
-        if (!v)             { setError(Birthday, 'Please enter your birthday.'); return false; }
-        if (!bdayOk(v))     { setError(Birthday, 'You must be at least 18 years old to work.'); return false; }
-        clearError(Birthday); return true;
+        if (!v){
+          setError(Birthday, 'Please enter your birthday.');
+          return false;
+        }
+        if (!bdayOk(v)){
+          setError(Birthday, 'You must be at least 18 years old to work.');
+          return false;
+        }
+        clearError(Birthday);
+        return true;
       }
       function vExp(){
         const v = myExperience.value;
-        if (!v.trim())      { setError(myExperience, 'Experience cannot be left blank.'); return false; }
-        if (!expOk(v))      { setError(myExperience, 'Experience must be at least 20 characters long.'); return false; }
-        clearError(myExperience); return true;
+        if (!v.trim()){
+          setError(myExperience, 'Experience cannot be left blank.');
+          return false;
+        }
+        if (!expOk(v)){
+          setError(myExperience, 'Experience must be at least 20 characters long.');
+          return false;
+        }
+        clearError(myExperience);
+        return true;
       }
 
       [[Name, vName],[Email, vEmail],[StartDate, vStart],[Birthday, vBday],[myExperience, vExp]].forEach(([el, fn])=>{
