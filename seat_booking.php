@@ -127,7 +127,7 @@ if ($stmt = $dbcnx->prepare($sqlBooked)) {
         <div id="main_nav">
           <nav>
             <ul>
-              <li><a href="#">PROMOTIONS</a></li>
+              <li><a href="promotions.php">PROMOTIONS</a></li>
               <li><a href="bookings.php">BOOKINGS</a></li>
               <li><a href="profile.php">PROFILE</a></li>
             </ul>
