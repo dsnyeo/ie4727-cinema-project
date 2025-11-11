@@ -108,24 +108,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       margin-top:4px;
       min-height:14px;
     }
+
     .invalid{
       border-color:#ad2a2a !important;
       box-shadow: 0 0 0 2px rgba(173,42,42,0.2);
     }
+
     .notice{
       padding:12px 14px;
       border-radius:8px;
       margin:14px 0;
     }
+
     .notice.ok{
       background:#0e2a18;
       color:#b6ffd0;
       border:1px solid #174d2a;
     }
+
     .notice.err{
       background:#2a0000;
       color:#ffc7c7;
       border:1px solid #5a1b1b;
+    }
+
+    #StartDate::-webkit-calendar-picker-indicator,
+    #Birthday::-webkit-calendar-picker-indicator {
+      filter: invert(1) brightness(1.7);
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    #StartDate, #Birthday {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M7 2a1 1 0 0 0-1 1v1H5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3h-1V3a1 1 0 1 0-2 0v1H8V3a1 1 0 0 0-1-1ZM5 8h14v11a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V8Zm3 3v2h2v-2H8Zm0 4v2h2v-2H8Zm4-4v2h2v-2h-2Zm0 4v2h2v-2h-2Zm4-4v2h2v-2h-2Zm0 4v2h2v-2h-2Z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 20px 20px;
+      padding-right: 44px;
+      color-scheme: dark;
+    }
+
+    #StartDate:hover,
+    #Birthday:hover {
+      filter: brightness(1.05);
     }
   </style>
 </head>
@@ -211,7 +236,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="date" name="StartDate" id="StartDate" required
                        value="<?= e($StartDate) ?>"
                        class="<?= isset($errors['StartDate']) ? 'invalid' : '' ?>"
-                       style="width:100%; padding:10px; background:#222; border:1px solid #555; border-radius:6px; color:#fff;" />
+                       style="width:100%; padding:10px; background-color:#222; border:1px solid #555; border-radius:6px; color:#fff;" />
                 <div class="field-error" id="err-StartDate"><?= isset($errors['StartDate']) ? e($errors['StartDate']) : '' ?></div>
               </div>
             </div>
@@ -222,7 +247,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="date" name="Birthday" id="Birthday" required
                        value="<?= e($Birthday) ?>"
                        class="<?= isset($errors['Birthday']) ? 'invalid' : '' ?>"
-                       style="width:100%; padding:10px; background:#222; border:1px solid #555; border-radius:6px; color:#fff;" />
+                       style="width:100%; padding:10px; background-color:#222; border:1px solid #555; border-radius:6px; color:#fff;" />
                 <div class="field-error" id="err-Birthday"><?= isset($errors['Birthday']) ? e($errors['Birthday']) : '' ?></div>
               </div>
             </div>
