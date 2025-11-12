@@ -8,7 +8,7 @@ if (!isset($dbcnx) || $dbcnx->connect_errno) {
     die("Database connection not found or failed.");
 }
 
-// Admin-only guard
+//Admin-only guard
 if (!isset($_SESSION['sess_user']) || strtolower($_SESSION['sess_user']) !== 'admin') {
     die("Access denied. Admins only.");
 }
@@ -16,9 +16,7 @@ if (!isset($_SESSION['sess_user']) || strtolower($_SESSION['sess_user']) !== 'ad
 $successMsg = "";
 $errorMsg   = "";
 
-/**
- * Handle update existing screentime row
- */
+/* Handle update existing screentime row */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update') {
     $hall_code  = $_POST['hall_code'] ?? '';
     $timeslot   = $_POST['timeslot'] ?? '';
@@ -45,9 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-/**
- * Handle add new screentime row
- */
+/*Handle add new screentime rown*/
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add') {
     $new_hall  = $_POST['new_hall_code'] ?? '';
     $new_time  = $_POST['new_timeslot'] ?? '';
@@ -72,10 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-/**
- * Fetch all movies for dropdown
- * (update Title if your column name differs)
- */
+/** Fetch all movies for dropdown */
 $movies = [];
 $movieSql = "SELECT MovieCode, Title AS MovieTitle FROM movies ORDER BY Title";
 $movieRes = $dbcnx->query($movieSql);
@@ -85,9 +78,7 @@ if ($movieRes && $movieRes->num_rows > 0) {
     }
 }
 
-/**
- * Fetch existing screentimes
- */
+/* Fetch existing screentimes */
 $screentimeSql = "
     SELECT s.hall_code, s.timeslot, s.movie_code, m.Title AS MovieTitle
     FROM screentime s

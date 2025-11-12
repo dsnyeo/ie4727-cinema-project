@@ -1,13 +1,7 @@
 <?php
 session_start();
 include "dbconnect.php";
-
 function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
-
-// ---------------------------------------------------
-// 1. Base values (from when user first picked a show)
-// ---------------------------------------------------
-
 if (empty($_SESSION['booking'])) {
     header("Location: index.php");
     exit;
@@ -28,14 +22,9 @@ $rows       = ['A','B','C','D','E'];
 $colsLeft   = ['1','2','3','4'];  // seats block 1
 $colsRight  = ['5','6','7','8'];  // seats block 2
 
-// ---------------------------------------------------
-// 2. Check if we're editing an existing cart item
-//    (user clicked "Edit seats" in cart.php)
-// ---------------------------------------------------
-
 $isEditMode        = false;
 $editingIndex      = null;
-$preSelectedSeats  = [];  // seats we want to pre-highlight for user
+$preSelectedSeats  = []; 
 
 if (!empty($_GET['edit']) && !empty($_SESSION['edit_target'])) {
     $isEditMode = true;
@@ -43,8 +32,7 @@ if (!empty($_GET['edit']) && !empty($_SESSION['edit_target'])) {
     $editingIndex      = $_SESSION['edit_target']['cart_index']  ?? null;
     $preSelectedSeats  = $_SESSION['edit_target']['prev_seats']  ?? [];
 
-    // OVERWRITE the show details with the exact cart item details,
-    // so we show them the correct hall/date/timeslot they are editing
+
     if (!empty($_SESSION['edit_target']['hall_id'])) {
         $hallId = $_SESSION['edit_target']['hall_id'];
     }
@@ -52,7 +40,7 @@ if (!empty($_GET['edit']) && !empty($_SESSION['edit_target'])) {
         $showDate = $_SESSION['edit_target']['show_date'];
     }
     if (!empty($_SESSION['edit_target']['timeslot'])) {
-        // NOTE: we added 'timeslot' (24h format) into edit_target in edit_item.php
+   
         $timeslot = $_SESSION['edit_target']['timeslot'];
     }
     if (!empty($_SESSION['edit_target']['timeslot12'])) {
@@ -68,11 +56,7 @@ if (!empty($_GET['edit']) && !empty($_SESSION['edit_target'])) {
         $movieTitle = $_SESSION['cart'][$editingIndex]['movie_title'];
     }
 }
-
-// ---------------------------------------------------
 // 3. Query all seats already booked for THIS hall/date/timeslot
-// ---------------------------------------------------
-
 $bookedSeats = [];
 
 $sqlBooked = "SELECT SeatCode 
@@ -90,16 +74,6 @@ if ($stmt = $dbcnx->prepare($sqlBooked)) {
     }
     $stmt->close();
 }
-
-// ---------------------------------------------------
-// 4. Now you have ready-to-use variables for the HTML below:
-//    $movieId, $movieTitle, $hallId, $showDate, $timeslot, $timeslot12
-//    $rows, $colsLeft, $colsRight
-//    $bookedSeats (from DB)
-//    $isEditMode (true/false)
-//    $preSelectedSeats (user's old seats to auto-select in UI)
-//    $editingIndex (which cart item is being edited)
-// ---------------------------------------------------
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -181,7 +155,6 @@ if ($stmt = $dbcnx->prepare($sqlBooked)) {
 
   <div class="screen-label">SCREEN</div>
 
-  <!-- form so we can submit selected seats to PHP -->
   <form method="post" action="proceed2cart.php" style="text-align:center;">
 
     <div class="seats-grid">
@@ -248,7 +221,7 @@ foreach ($rows as $r) {
     }
     echo '</div>';
 
-    echo '</div>'; // .seat-row
+    echo '</div>'; 
 }
 ?>
     </div>
@@ -268,16 +241,12 @@ foreach ($rows as $r) {
       </div>
     </div>
 
-    <!-- This will update live -->
     <div id="selectionSummary"
       style="margin-top:1rem; font-size:0.9rem; color:#0f172a; font-weight:500; text-align:center;">
       No seat selected
     </div>
 
-    <!-- Hidden input that will be filled with "A1,B2,..." before submit -->
     <input type="hidden" name="selected_seats" id="selectedSeatsInput" value="">
-
-    <!-- You might also want to send hall/date/timeslot so PHP knows which show -->
     <input type="hidden" name="hall_id" value="<?= e($hallId) ?>">
     <input type="hidden" name="show_date" value="<?= e($showDate) ?>">
     <input type="hidden" name="timeslot" value="<?= e($timeslot) ?>">
@@ -302,34 +271,28 @@ foreach ($rows as $r) {
 </div>
 
   </main>
-    <!-- Footer -->
 <footer class="site_footer">
-  <!-- two panels: left = connect, right = payment -->
   <div class="container footer_panels">
     <div class="footer_panel left">
       <div class="panel_title">CONNECT WITH US</div>
 <ul class="icon_list" aria-label="Social links">
   <li>
     <a class="icon_btn">
-      <!-- Facebook / Meta-style "f" -->
       <img src="./images/fb.svg" alt="Facebook" >
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="Twitter / X">
-      <!-- Twitter bird -->
       <img src="./images/x.svg" alt="Twitter | X">
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="Instagram">
-      <!-- Instagram camera -->
       <img src="./images/instagram.svg" alt="Instagram">
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="TikTok">
-      <!-- TikTok note -->
       <img src="./images/tiktok.svg" alt="TikTok">
     </a>
   </li>
@@ -341,19 +304,16 @@ foreach ($rows as $r) {
 <ul class="icon_list" aria-label="Payment">
   <li>
     <a href="#" class="icon_btn">
-      <!-- Facebook / Meta-style "f" -->
       <img src="./images/visa.svg" alt="visa" >
     </a>
   </li>
   <li>
     <a href="#" class="icon_btn" aria-label="mastercard">
-      <!-- Twitter bird -->
       <img src="./images/mastercard.svg" alt="mastercard">
     </a>
   </li>
   <li>
     <a href="#" class="icon_btn" aria-label="cash">
-      <!-- Instagram camera -->
       <img src="./images/cash.svg" alt="cash">
     </a>
   </li>
@@ -418,7 +378,6 @@ foreach ($rows as $r) {
     box.style.display = show ? 'block' : 'none';
   }
 
-  // keep the initial selection summary in sync (and sorted)
   updateSelectionSummary();
 </script>
 </html>

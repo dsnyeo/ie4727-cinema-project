@@ -28,7 +28,7 @@ $movieId = $_GET['id'] ?? '';
 if (!$movieId) die("Missing movie id.");
 $_SESSION['selected_movie_id'] = $movieId;
 
-/* 1) Fetch movie details (prepared) */
+/*Fetch movie details (prepared)*/
 $sqlMovie = "SELECT 
   MovieCode AS movie_id, Title AS title, PosterPath AS poster_path,
   Synopsis AS synopsis, Genre AS genre, TicketPrice AS ticket_price,
@@ -164,7 +164,6 @@ $st->close();
   <?php if (empty($slots)): ?>
     <p class="ts-meta">No sessions are scheduled for this title.</p>
   <?php else: ?>
-    <!-- Optional helper text (first two, or show halls) -->
     <?php
       $hallSet = [];
       foreach ($slots as $s) {
@@ -173,7 +172,7 @@ $st->close();
         }
       }
       $hallList   = array_keys($hallSet);
-      $singleHall = $hallList[0] ?? ''; // the only hall (or empty if none found)
+      $singleHall = $hallList[0] ?? ''; 
     ?>
 
     <div class="ts-meta">
@@ -194,8 +193,6 @@ $st->close();
       </div>
       
       <input type="hidden" name="hall_id" value="<?= e($singleHall) ?>">
-
-
       <!-- Timeslots as radio pills -->
       <div class="ts-pills" style="display:flex;gap:.5rem;flex-wrap:wrap;margin:.75rem 0;">
         <?php foreach ($slots as $i => $s): $rid = 'ts_' . $i; ?>
@@ -215,42 +212,33 @@ $st->close();
     </form>
   <?php endif; ?>
 </section>
-        
-        <!-- actions -->
-        
       </div>
     </div>
   </div>
 </main>
 
 <footer class="site_footer">
-
-  <!-- two panels: left = connect, right = payment -->
   <div class="container footer_panels">
     <div class="footer_panel left">
       <div class="panel_title">CONNECT WITH US</div>
 <ul class="icon_list" aria-label="Social links">
   <li>
     <a class="icon_btn">
-      <!-- Facebook / Meta-style "f" -->
       <img src="./images/fb.svg" alt="Facebook" >
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="Twitter / X">
-      <!-- Twitter bird -->
       <img src="./images/x.svg" alt="Twitter | X">
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="Instagram">
-      <!-- Instagram camera -->
       <img src="./images/instagram.svg" alt="Instagram">
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="TikTok">
-      <!-- TikTok note -->
       <img src="./images/tiktok.svg" alt="TikTok">
     </a>
   </li>
@@ -262,19 +250,16 @@ $st->close();
 <ul class="icon_list" aria-label="Payment">
   <li>
     <a href="#" class="icon_btn">
-      <!-- Facebook / Meta-style "f" -->
       <img src="./images/visa.svg" alt="visa" >
     </a>
   </li>
   <li>
     <a href="#" class="icon_btn" aria-label="mastercard">
-      <!-- Twitter bird -->
       <img src="./images/mastercard.svg" alt="mastercard">
     </a>
   </li>
   <li>
     <a href="#" class="icon_btn" aria-label="cash">
-      <!-- Instagram camera -->
       <img src="./images/cash.svg" alt="cash">
     </a>
   </li>
@@ -324,7 +309,7 @@ if (form) {
 (function () {
   // login flag from PHP
   var IS_LOGGED_IN = <?php echo json_encode(isset($_SESSION['user_id'])); ?>;
-  // exact current URL (path + query), e.g. "moviedetails.php?id=123"
+  // exact current URL
   var RETURN_URL = <?php echo json_encode($_SERVER['REQUEST_URI']); ?>;
 
   function onReady(fn){ if (document.readyState !== 'loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
@@ -338,14 +323,13 @@ if (form) {
       if (!IS_LOGGED_IN) {
         e.preventDefault();
         alert('You need to be logged in to continue.');
-        // send them back to the SAME moviedetails page
-        window.location.assign(RETURN_URL);
+\        window.location.assign(RETURN_URL);
         return false;
       }
     }
 
     btn.addEventListener('click', guard);
-    if (form) form.addEventListener('submit', guard); // covers Enter key
+    if (form) form.addEventListener('submit', guard);
   });
 })();
 </script>

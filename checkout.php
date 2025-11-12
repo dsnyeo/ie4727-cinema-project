@@ -102,7 +102,7 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
     $seatsArray  = (isset($item['seats']) && is_array($item['seats'])) ? $item['seats'] : [];
     $qty         = count($seatsArray);
 
-    // 🚫 skip ghost sessions that have 0 seats
+    //skip ghost sessions that have 0 seats
     if ($qty === 0) {
         continue;
     }
@@ -160,7 +160,7 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
         </div>
       </div>
 
-      <!-- Hidden fields so insert_booking.php knows what we're buying -->
+      <!-- Hidden fields for insert_booking.php -->
       <input type="hidden" name="item[<?php echo $i; ?>][movie_id]" value="<?php echo e($movie_id); ?>">
       <input type="hidden" name="item[<?php echo $i; ?>][movie_title]" value="<?php echo e($movie_title); ?>">
       <input type="hidden" name="item[<?php echo $i; ?>][hall_id]" value="<?php echo e($hall_id); ?>">
@@ -354,32 +354,27 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
   </div>
   <!-- Footer -->
 <footer class="site_footer">
-  <!-- two panels: left = connect, right = payment -->
   <div class="container footer_panels">
     <div class="footer_panel left">
       <div class="panel_title">CONNECT WITH US</div>
 <ul class="icon_list" aria-label="Social links">
   <li>
     <a class="icon_btn">
-      <!-- Facebook / Meta-style "f" -->
       <img src="./images/fb.svg" alt="Facebook" >
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="Twitter / X">
-      <!-- Twitter bird -->
       <img src="./images/x.svg" alt="Twitter | X">
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="Instagram">
-      <!-- Instagram camera -->
       <img src="./images/instagram.svg" alt="Instagram">
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="TikTok">
-      <!-- TikTok note -->
       <img src="./images/tiktok.svg" alt="TikTok">
     </a>
   </li>
@@ -391,19 +386,16 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
 <ul class="icon_list" aria-label="Payment">
   <li>
     <a href="#" class="icon_btn">
-      <!-- Facebook / Meta-style "f" -->
       <img src="./images/visa.svg" alt="visa" >
     </a>
   </li>
   <li>
     <a href="#" class="icon_btn" aria-label="mastercard">
-      <!-- Twitter bird -->
       <img src="./images/mastercard.svg" alt="mastercard">
     </a>
   </li>
   <li>
     <a href="#" class="icon_btn" aria-label="cash">
-      <!-- Instagram camera -->
       <img src="./images/cash.svg" alt="cash">
     </a>
   </li>
@@ -428,16 +420,16 @@ function toggleCardDetails() {
   }
 }
 
-// ===== Promo logic =====
+//Promo logic
 const BASE_TOTAL = <?php echo json_encode((float)$grandTotalRaw); ?>;
 let currentTotal = BASE_TOTAL;
 
 function applyPromo() {
-  const input        = document.getElementById('promo_code');
-  const msgEl        = document.getElementById('promo_message');
-  const originalEl   = document.getElementById('grand_total_original');
+  const input = document.getElementById('promo_code');
+  const msgEl = document.getElementById('promo_message');
+  const originalEl = document.getElementById('grand_total_original');
   const discountedEl = document.getElementById('grand_total_discounted');
-  const totalInput   = document.getElementById('grand_total_input');
+  const totalInput = document.getElementById('grand_total_input');
   const promoHidden  = document.getElementById('promo_code_input');
 
   const rawCode = (input.value || '').trim();
@@ -468,9 +460,8 @@ function applyPromo() {
   let newTotal = BASE_TOTAL;
   let message = '';
 
-  // =============================
+ 
   // PROMO RULES
-  // =============================
   if (code === 'SEC0ND1') {
     newTotal = BASE_TOTAL * 0.80; // 20% OFF
     message = 'Promo applied: 20% off (SEC0ND1).';

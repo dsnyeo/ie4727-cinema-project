@@ -287,32 +287,27 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
     </div>
 <!-- Footer -->
 <footer class="site_footer">
-  <!-- two panels: left = connect, right = payment -->
   <div class="container footer_panels">
     <div class="footer_panel left">
       <div class="panel_title">CONNECT WITH US</div>
 <ul class="icon_list" aria-label="Social links">
   <li>
     <a class="icon_btn">
-      <!-- Facebook / Meta-style "f" -->
       <img src="./images/fb.svg" alt="Facebook" >
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="Twitter / X">
-      <!-- Twitter bird -->
       <img src="./images/x.svg" alt="Twitter | X">
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="Instagram">
-      <!-- Instagram camera -->
       <img src="./images/instagram.svg" alt="Instagram">
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="TikTok">
-      <!-- TikTok note -->
       <img src="./images/tiktok.svg" alt="TikTok">
     </a>
   </li>
@@ -324,19 +319,16 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
 <ul class="icon_list" aria-label="Payment">
   <li>
     <a href="#" class="icon_btn">
-      <!-- Facebook / Meta-style "f" -->
       <img src="./images/visa.svg" alt="visa" >
     </a>
   </li>
   <li>
     <a href="#" class="icon_btn" aria-label="mastercard">
-      <!-- Twitter bird -->
       <img src="./images/mastercard.svg" alt="mastercard">
     </a>
   </li>
   <li>
     <a href="#" class="icon_btn" aria-label="cash">
-      <!-- Instagram camera -->
       <img src="./images/cash.svg" alt="cash">
     </a>
   </li>
@@ -350,10 +342,9 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
   if (!checkoutForm) return;
 
   checkoutForm.addEventListener("submit", function(e) {
-    // PHP passes this value into JS safely
     const cartEmpty = <?= empty($nonEmptyItems) ? 'true' : 'false' ?>;
     if (cartEmpty) {
-      e.preventDefault(); // stop form submission
+      e.preventDefault();
       alert("No items in cart. Please add tickets before checking out.");
     }
   });

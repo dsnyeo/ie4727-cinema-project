@@ -21,11 +21,11 @@ if ($flash) {
       <?php echo $flash_safe; ?>
     </div>
   <?php endif; ?>
-  <!-- Header / Top Nav -->
+  <!-- Header -->
   <header>
     <div id="wrapper">
-    <div class="container header_bar">
-      <a class="brand" href="index.php">
+      <div class="container header_bar">
+        <a class="brand" href="index.php">
           <span class="brand_logo">
             <img src="./images/cinema_logo.png" alt="Cinema Logo" >
           </span>
@@ -34,20 +34,32 @@ if ($flash) {
             <span>Theatre</span>
           </span>
         </a>
-      
-      <div id="main_nav">
-      <nav>
-        <ul>
-          <li><a href="promotions.php">PROMOTIONS</a></li>
-          <li><a href="bookings.php">BOOKINGS</a></li>
-          <li><a href="profile.php">PROFILE</a></li>
-          <li><a href="jobs.php">JOBS @ CineLux Theatre</a></li>
-        </ul>
-      </nav>
-      </div>
 
-      <a class="btn btn_ghost" href="login-main.php">LOGIN</a>
-    </div>
+        <div id="main_nav">
+          <nav>
+            <ul>
+              <li><a href="promotions.php">PROMOTIONS</a></li>
+              <li><a href="bookings.php">BOOKINGS</a></li>
+              <li><a href="profile.php">PROFILE</a></li>
+              <li><a href="jobs.php">JOBS @ CineLux Theatre</a></li>
+            </ul>
+          </nav>
+        </div>
+
+        <div>
+          <?php if (isset($_SESSION['sess_user'])): ?>
+            <span class="welcome_text">
+              <a href="cart.php" style="text-decoration: none;">
+              🛒
+              </a>
+              👋 Welcome, <strong><?= e($_SESSION['sess_user']) ?></strong>
+            </span>
+            <a class="btn btn_ghost" href="logout.php">LOGOUT</a>
+          <?php else: ?>
+            <a class="btn btn_ghost" href="login-main.php">LOGIN</a>
+          <?php endif; ?>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -66,7 +78,18 @@ if ($flash) {
     <p>Don’t have an account? <a href="register-main.php">Register here</a></p>
   </div>
 
+
+
+  <!-- Footer -->
 <footer class="site_footer">
+  <div class="container footer_links">
+    <a href="index.php">HOME</a>
+    <a href="#">CONTACT US</a>
+    <a href="jobs.php">JOBS AT CineLux Theatre</a>
+  </div>
+  <div class="container">
+    <hr class="footer_divider" />
+  </div>
 
   <div class="container footer_panels">
     <div class="footer_panel left">
@@ -114,6 +137,7 @@ if ($flash) {
     </a>
   </li>
 </ul>
+    <small>Credit/Debit Cards and Cash are welcomed</small>
     </div>
   </div>
 </footer>

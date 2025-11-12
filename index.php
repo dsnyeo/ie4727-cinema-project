@@ -2,12 +2,11 @@
 include "dbconnect.php";
 session_start();
 
-/* --- safety check for db connection --- */
 if (!isset($dbcnx) || $dbcnx->connect_errno) {
   die("Database connection not found or failed.");
 }
 
-/* --- Fetch 6 trending movies (NOW SHOWING) --- */
+/*6 trending movies (NOW SHOWING)*/
 $sql_now = "SELECT 
               MovieCode AS movie_id,
               Title AS title,
@@ -27,7 +26,7 @@ $sql_now = "SELECT
 $res_now = $dbcnx->query($sql_now);
 $now_movies = $res_now && $res_now->num_rows > 0 ? $res_now->fetch_all(MYSQLI_ASSOC) : [];
 
-/* --- Fetch 6 older movies (Trending = 0) --- */
+/*6 older movies (Trending = 0)*/
 $sql_old = "SELECT 
               MovieCode AS movie_id,
               Title AS title,
@@ -162,32 +161,27 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
   <!-- Footer -->
 <footer class="site_footer">
 
-  <!-- two panels: left = connect, right = payment -->
   <div class="container footer_panels">
     <div class="footer_panel left">
       <div class="panel_title">CONNECT WITH US</div>
 <ul class="icon_list" aria-label="Social links">
   <li>
     <a class="icon_btn">
-      <!-- Facebook / Meta-style "f" -->
       <img src="./images/fb.svg" alt="Facebook" >
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="Twitter / X">
-      <!-- Twitter bird -->
       <img src="./images/x.svg" alt="Twitter | X">
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="Instagram">
-      <!-- Instagram camera -->
       <img src="./images/instagram.svg" alt="Instagram">
     </a>
   </li>
   <li>
     <a class="icon_btn" aria-label="TikTok">
-      <!-- TikTok note -->
       <img src="./images/tiktok.svg" alt="TikTok">
     </a>
   </li>
@@ -199,24 +193,20 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
 <ul class="icon_list" aria-label="Payment">
   <li>
     <a href="#" class="icon_btn">
-      <!-- Facebook / Meta-style "f" -->
       <img src="./images/visa.svg" alt="visa" >
     </a>
   </li>
   <li>
     <a href="#" class="icon_btn" aria-label="mastercard">
-      <!-- Twitter bird -->
       <img src="./images/mastercard.svg" alt="mastercard">
     </a>
   </li>
   <li>
     <a href="#" class="icon_btn" aria-label="cash">
-      <!-- Instagram camera -->
       <img src="./images/cash.svg" alt="cash">
     </a>
   </li>
 </ul>
-    
     </div>
   </div>
 </footer>
