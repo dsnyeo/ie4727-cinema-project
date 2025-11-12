@@ -108,6 +108,13 @@ if ($stmt) {
   $stmt->close();
 }
 
+$orderSeatTotals = [];
+foreach ($rows as $r) {
+  $oid = (int)$r['OrderID'];
+  if (!isset($orderSeatTotals[$oid])) $orderSeatTotals[$oid] = 0;
+  $orderSeatTotals[$oid]++;
+}
+
 $groups = [];
 foreach ($rows as $r) {
   $key = implode('|', [
@@ -244,7 +251,13 @@ function e($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
 
             <div class="summary-row">
                 <span class="meta-line">Total Paid</span>
-                <span class="summary-total">$<?= number_format((float)$g['PaidAmount'], 2) ?></span>
+                <?php
+                  $seatsCount = count($g['Seats']);
+                  $orderSeats = isset($orderSeatTotals[$g['OrderID']]) ? (int)$orderSeatTotals[$g['OrderID']] : $seatsCount;
+                  $perSeat    = (float)$g['PaidAmount'] / max(1, $orderSeats);
+                  $groupPaid  = $perSeat * $seatsCount;
+                ?>
+<span class="summary-total">$<?= number_format($groupPaid, 2) ?></span>
             </div>
 
             <div class="actions">
