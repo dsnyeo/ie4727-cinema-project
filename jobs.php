@@ -63,6 +63,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   if (!trim($Email)) $errors['Email'] = 'Email cannot be left blank.';
   elseif (!email_ok($Email)) $errors['Email'] = 'Please enter a valid email address.';
+  else {
+    if (isset($dbcnx) && !$dbcnx->connect_errno) {
+      if ($stmt = $dbcnx->prepare('SELECT 1 FROM jobs WHERE email = ? LIMIT 1')) {
+        $stmt->bind_param('s', $Email);
+        $stmt->execute();
+        $stmt->store_result();
+        if ($stmt->num_rows > 0) {
+          $errors['Email'] = 'This email has already applied.';
+        }
+        $stmt->close();
+      }
+    }
+  }
 
   if (!$StartDate) $errors['StartDate'] = 'Please pick a start date.';
   elseif (!start_ok($StartDate)) $errors['StartDate'] = 'Your start date cannot be today or a past date.';
