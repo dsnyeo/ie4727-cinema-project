@@ -111,6 +111,7 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
               <li><a href="promotions.php">PROMOTIONS</a></li>
               <li><a href="bookings.php">BOOKINGS</a></li>
               <li><a href="profile.php">PROFILE</a></li>
+              <li><a href="jobs.php">JOBS @ CineLux Theatre</a></li>
             </ul>
           </nav>
         </div>
@@ -131,8 +132,8 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
       </div>
     </div>
   </header>
-  <div class="cart-container">
 
+  <div class="cart-container">
    <div class="cart-shell">
 
     <!-- Cart Header -->

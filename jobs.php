@@ -155,6 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </style>
 </head>
 <body>
+  <!-- Header -->
   <header>
     <div id="wrapper">
       <div class="container header_bar">
@@ -174,13 +175,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <li><a href="promotions.php">PROMOTIONS</a></li>
               <li><a href="bookings.php">BOOKINGS</a></li>
               <li><a href="profile.php">PROFILE</a></li>
+              <li><a href="jobs.php">JOBS @ CineLux Theatre</a></li>
             </ul>
           </nav>
         </div>
 
         <div>
           <?php if (isset($_SESSION['sess_user'])): ?>
-            <span class="welcome_text">👋 Welcome, <strong><?= e($_SESSION['sess_user']) ?></strong></span>
+            <span class="welcome_text">
+              <a href="cart.php" style="text-decoration: none;">
+              🛒
+              </a>
+              👋 Welcome, <strong><?= e($_SESSION['sess_user']) ?></strong>
+            </span>
             <a class="btn btn_ghost" href="logout.php">LOGOUT</a>
           <?php else: ?>
             <a class="btn btn_ghost" href="login-main.php">LOGIN</a>

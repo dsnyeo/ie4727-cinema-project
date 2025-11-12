@@ -101,7 +101,6 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
   </header>
 
   <main>
-    <!-- NOW SHOWING -->
     <section class="section">
       <div class="container">
         <h2 class="section_title">NOW SHOWING</h2>
@@ -162,16 +161,6 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
 
   <!-- Footer -->
 <footer class="site_footer">
-  <div class="container footer_links">
-    <a href="index.php">HOME</a>
-    <a href="#">CONTACT US</a>
-    
-  </div>
-
-  <!-- thin line across the container -->
-  <div class="container">
-    <hr class="footer_divider" />
-  </div>
 
   <!-- two panels: left = connect, right = payment -->
   <div class="container footer_panels">

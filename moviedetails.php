@@ -96,6 +96,7 @@ $st->close();
               <li><a href="promotions.php">PROMOTIONS</a></li>
               <li><a href="bookings.php">BOOKINGS</a></li>
               <li><a href="profile.php">PROFILE</a></li>
+              <li><a href="jobs.php">JOBS @ CineLux Theatre</a></li>
             </ul>
           </nav>
         </div>
@@ -103,6 +104,9 @@ $st->close();
         <div>
           <?php if (isset($_SESSION['sess_user'])): ?>
             <span class="welcome_text">
+              <a href="cart.php" style="text-decoration: none;">
+              🛒
+              </a>
               👋 Welcome, <strong><?= e($_SESSION['sess_user']) ?></strong>
             </span>
             <a class="btn btn_ghost" href="logout.php">LOGOUT</a>

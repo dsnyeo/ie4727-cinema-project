@@ -1,7 +1,7 @@
 /*Base / Reset*/
 :root{
   --header-h: 60px;
-  --footer-h: 180px;
+  --footer-h: 120px;
 }
 
 *,
@@ -1298,15 +1298,17 @@ h1{
     margin:0;
   }
 
-  .actions .btn-main,
-  .actions .btn-danger{
+  .actions .btn-main{
     display:block;
     width:100%;
     padding:.75rem 1rem;
     border-radius:10px;
     text-align:center;
     font-weight:600;
+    background-color: #16a34a;
   }
+
+
 
   .btn-ghost{
     flex:1 1 auto;

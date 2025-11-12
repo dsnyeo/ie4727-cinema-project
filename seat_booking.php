@@ -130,6 +130,7 @@ if ($stmt = $dbcnx->prepare($sqlBooked)) {
               <li><a href="promotions.php">PROMOTIONS</a></li>
               <li><a href="bookings.php">BOOKINGS</a></li>
               <li><a href="profile.php">PROFILE</a></li>
+              <li><a href="jobs.php">JOBS @ CineLux Theatre</a></li>
             </ul>
           </nav>
         </div>
