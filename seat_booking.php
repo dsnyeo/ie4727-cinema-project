@@ -110,7 +110,6 @@ if ($stmt = $dbcnx->prepare($sqlBooked)) {
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Header -->
   <header>
     <div id="wrapper">
       <div class="container header_bar">
@@ -305,17 +304,6 @@ foreach ($rows as $r) {
   </main>
     <!-- Footer -->
 <footer class="site_footer">
-  <div class="container footer_links">
-    <a href="index.php">HOME</a>
-    <a href="#">CONTACT US</a>
-    <a href="jobs.php">JOBS AT CineLux Theatre</a>
-  </div>
-
-  <!-- thin line across the container -->
-  <div class="container">
-    <hr class="footer_divider" />
-  </div>
-
   <!-- two panels: left = connect, right = payment -->
   <div class="container footer_panels">
     <div class="footer_panel left">
@@ -370,7 +358,6 @@ foreach ($rows as $r) {
     </a>
   </li>
 </ul>
-    <small>Credit/Debit Cards and Cash are welcomed</small>
     </div>
   </div>
 </footer>

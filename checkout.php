@@ -65,6 +65,7 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
               <li><a href="promotions.php">PROMOTIONS</a></li>
               <li><a href="bookings.php">BOOKINGS</a></li>
               <li><a href="profile.php">PROFILE</a></li>
+              <li><a href="jobs.php">JOBS @ CineLux Theatre</a></li>
             </ul>
           </nav>
         </div>
@@ -353,17 +354,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
   </div>
   <!-- Footer -->
 <footer class="site_footer">
-  <div class="container footer_links">
-    <a href="index.php">HOME</a>
-    <a href="#">CONTACT US</a>
-    <a href="jobs.php">JOBS AT CineLux Theatre</a>
-  </div>
-
-  <!-- thin line across the container -->
-  <div class="container">
-    <hr class="footer_divider" />
-  </div>
-
   <!-- two panels: left = connect, right = payment -->
   <div class="container footer_panels">
     <div class="footer_panel left">
@@ -418,7 +408,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
     </a>
   </li>
 </ul>
-    <small>Credit/Debit Cards and Cash are welcomed</small>
     </div>
   </div>
 </footer>

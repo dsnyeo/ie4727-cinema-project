@@ -282,16 +282,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </main>
 
 <footer class="site_footer">
-  <div class="container footer_links">
-    <a href="index.php">HOME</a>
-    <a href="#">CONTACT US</a>
-    <a href="jobs.php">JOBS AT CineLux Theatre</a>
-  </div>
-
-  <div class="container">
-    <hr class="footer_divider" />
-  </div>
-
   <div class="container footer_panels">
     <div class="footer_panel left">
       <div class="panel_title">CONNECT WITH US</div>
@@ -338,7 +328,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </a>
   </li>
 </ul>
-    <small>Credit/Debit Cards and Cash are welcomed</small>
     </div>
   </div>
 </footer>
