@@ -110,7 +110,6 @@ if ($stmt = $dbcnx->prepare($sqlBooked)) {
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Header -->
   <header>
     <div id="wrapper">
       <div class="container header_bar">
@@ -305,7 +304,6 @@ foreach ($rows as $r) {
   </main>
     <!-- Footer -->
 <footer class="site_footer">
-
   <!-- two panels: left = connect, right = payment -->
   <div class="container footer_panels">
     <div class="footer_panel left">

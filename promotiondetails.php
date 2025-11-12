@@ -128,7 +128,6 @@ $img = ($promo && !empty($promo['PromoImage'])) ? $promo['PromoImage'] : 'images
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header>
     <div id="wrapper">
       <div class="container header_bar">
@@ -217,12 +216,6 @@ $img = ($promo && !empty($promo['PromoImage'])) ? $promo['PromoImage'] : 'images
     </section>
   </main>
   <footer class="site_footer">
-    <div class="container footer_links">
-      <a href="index.php">HOME</a>
-      <a href="#">CONTACT US</a>
-      <a href="jobs.php">JOBS @ CineLux Theatre</a>
-    </div>
-    <div class="container"><hr class="footer_divider" /></div>
     <div class="container footer_panels">
       <div class="footer_panel left">
         <div class="panel_title">CONNECT WITH US</div>
@@ -240,7 +233,6 @@ $img = ($promo && !empty($promo['PromoImage'])) ? $promo['PromoImage'] : 'images
           <li><a href="#" class="icon_btn"><img src="./images/mastercard.svg" alt="mastercard"></a></li>
           <li><a href="#" class="icon_btn"><img src="./images/cash.svg" alt="cash"></a></li>
         </ul>
-        <small>Credit/Debit Cards and Cash are welcomed</small>
       </div>
     </div>
   </footer>
