@@ -86,7 +86,7 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Your Cart</title>
+<title>Cart Summary</title>
 <link rel="stylesheet" href="styles.css" />
 
 </head>
