@@ -78,6 +78,7 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
               <li><a href="promotions.php">PROMOTIONS</a></li>
               <li><a href="bookings.php">BOOKINGS</a></li>
               <li><a href="profile.php">PROFILE</a></li>
+              <li><a href="jobs.php">JOBS @ CineLux Theatre</a></li>
             </ul>
           </nav>
         </div>
@@ -164,7 +165,7 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
   <div class="container footer_links">
     <a href="index.php">HOME</a>
     <a href="#">CONTACT US</a>
-    <a href="jobs.php">JOBS @ CineLux Theatre</a>
+    
   </div>
 
   <!-- thin line across the container -->
@@ -226,7 +227,7 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
     </a>
   </li>
 </ul>
-    <small>Credit/Debit Cards and Cash are welcomed</small>
+    
     </div>
   </div>
 </footer>

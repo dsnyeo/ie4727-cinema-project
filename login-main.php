@@ -51,7 +51,7 @@ if ($flash) {
   </header>
 
   <div class="login_box">
-    <h2>Member Login</h2>
+    <h2>Login</h2>
     <form action="login.php" method="post" name="loginForm">
       <label for="username">Username</label>
       <input type="text" id="username" name="username" placeholder="Enter username" required>

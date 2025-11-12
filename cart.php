@@ -21,9 +21,9 @@ $PRICE_PER_SEAT = $_SESSION['ticket_price'];
 $merged = [];
 
 foreach ($cartItems as $ci) {
-    $movie_id    = $ci['movie_id']    ?? '';
+    $movie_id = $ci['movie_id']    ?? '';
     $movie_title = $ci['movie_title'] ?? '';
-    $hall_id     = $ci['hall_id']     ?? '';
+    $hall_id = $ci['hall_id']     ?? '';
     $show_date   = $ci['show_date']   ?? '';
     $timeslot    = $ci['timeslot']    ?? '';   // use 24h as canonical
     $timeslot12  = $ci['timeslot12']  ?? '';
