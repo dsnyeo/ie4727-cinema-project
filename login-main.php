@@ -126,7 +126,6 @@ if ($flash) {
     </a>
   </li>
 </ul>
-    <small>Credit/Debit Cards and Cash are welcomed</small>
     </div>
   </div>
 </footer>
