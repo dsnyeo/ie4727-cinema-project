@@ -323,7 +323,7 @@ if (form) {
       if (!IS_LOGGED_IN) {
         e.preventDefault();
         alert('You need to be logged in to continue.');
-\        window.location.assign(RETURN_URL);
+        window.location.assign(RETURN_URL);
         return false;
       }
     }
