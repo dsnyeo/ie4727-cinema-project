@@ -78,19 +78,8 @@ if ($flash) {
     <p>Don’t have an account? <a href="register-main.php">Register here</a></p>
   </div>
 
-
-
   <!-- Footer -->
 <footer class="site_footer">
-  <div class="container footer_links">
-    <a href="index.php">HOME</a>
-    <a href="#">CONTACT US</a>
-    <a href="jobs.php">JOBS AT CineLux Theatre</a>
-  </div>
-  <div class="container">
-    <hr class="footer_divider" />
-  </div>
-
   <div class="container footer_panels">
     <div class="footer_panel left">
       <div class="panel_title">CONNECT WITH US</div>
