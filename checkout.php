@@ -4,7 +4,6 @@ include "dbconnect.php";
 
 function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
 
-// --- guard: booking + cart must exist ---
 if (empty($_SESSION['booking'])) {
     header("Location: index.php");
     exit;
@@ -16,17 +15,12 @@ if (empty($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
 
 $cartItems = $_SESSION['cart'];
 $PRICE_PER_SEAT = $_SESSION['ticket_price'];
-
-
-
-
-// we also accept POST from previous page for consistency
 $grandTotalRaw = 0;
 foreach ($cartItems as $ci) {
     $seatsArray = (isset($ci['seats']) && is_array($ci['seats'])) ? $ci['seats'] : [];
     $qty = count($seatsArray);
 
-    // skip ghost entry with 0 seats
+    
     if ($qty === 0) {
         continue;
     }
@@ -45,8 +39,8 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<!-- Header -->
-  <header>
+
+<header>
     <div id="wrapper">
       <div class="container header_bar">
         <a class="brand" href="index.php">
@@ -89,7 +83,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
   <div class="checkout-container">
 
 <form action="insert_booking.php" method="post" class="checkout-wrapper">
-  <!-- BOX 1: Order Summary -->
   <section class="panel full-row">
     <div class="panel-header">
       <div>
@@ -102,12 +95,10 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
     $seatsArray  = (isset($item['seats']) && is_array($item['seats'])) ? $item['seats'] : [];
     $qty         = count($seatsArray);
 
-    //skip ghost sessions that have 0 seats
     if ($qty === 0) {
         continue;
     }
 
-    // only compute the rest if it's a valid item
     $movie_id    = $item['movie_id']    ?? '';
     $movie_title = $item['movie_title'] ?? '';
     $hall_id     = $item['hall_id']     ?? '';
@@ -160,7 +151,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
         </div>
       </div>
 
-      <!-- Hidden fields for insert_booking.php -->
       <input type="hidden" name="item[<?php echo $i; ?>][movie_id]" value="<?php echo e($movie_id); ?>">
       <input type="hidden" name="item[<?php echo $i; ?>][movie_title]" value="<?php echo e($movie_title); ?>">
       <input type="hidden" name="item[<?php echo $i; ?>][hall_id]" value="<?php echo e($hall_id); ?>">
@@ -195,13 +185,11 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
     <div class="value" id="grand_total_display"
         style="display:flex;align-items:baseline;gap:.6rem;">
         
-      <!-- Original price (normal by default, struck when discounted) -->
       <span id="grand_total_original"
             style="font-size:1.1rem;font-weight:600;color:#e5e7eb;">
         $<?php echo $grandTotalFmt; ?>
       </span>
 
-      <!-- Discounted price (hidden until promo applied) -->
       <span id="grand_total_discounted"
             style="display:none;font-size:1.25rem;font-weight:700;color:#22c55e;">
       </span>
@@ -223,7 +211,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
     <input type="hidden" name="grand_total" value="<?php echo e($grandTotalRaw); ?>">
   </section>
 
-  <!-- BOX 2: Contact Information -->
   <section class="panel">
     <div class="panel-header">
       <div>
@@ -257,7 +244,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
 
   </section>
 
-  <!-- BOX 3: Payment Method -->
   <section class="panel">
     <div class="panel-header">
       <div>
@@ -266,7 +252,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
       </div>
     </div>
 
-    <!-- Radio: Cash -->
     <div class="radio-row">
       <input type="radio"
              id="pay_cash"
@@ -279,7 +264,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
       </label>
     </div>
 
-    <!-- Radio: Card -->
     <div class="radio-row">
       <input type="radio"
              id="pay_card"
@@ -291,7 +275,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
       </label>
     </div>
 
-    <!-- Card detail box, hidden by default -->
     <div id="cardBox" class="card-details" style="display:none;">
       <div class="form-group">
         <label class="form-label" for="card_name">
@@ -344,7 +327,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
     </div>
   </section>
 
-  <!-- ACTION BUTTONS -->
   <div class="actions">
     <button type="submit" class="btn-main">Book & Confirm Seats →</button>
     <a class="btn-ghost" href="cart.php">← Back to Cart</a>
@@ -352,7 +334,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
 
 </form>
   </div>
-  <!-- Footer -->
 <footer class="site_footer">
   <div class="container footer_panels">
     <div class="footer_panel left">
@@ -420,7 +401,6 @@ function toggleCardDetails() {
   }
 }
 
-//Promo logic
 const BASE_TOTAL = <?php echo json_encode((float)$grandTotalRaw); ?>;
 let currentTotal = BASE_TOTAL;
 
@@ -435,11 +415,9 @@ function applyPromo() {
   const rawCode = (input.value || '').trim();
   const code = rawCode.toUpperCase();
 
-  // reset message
   msgEl.textContent = '';
   msgEl.style.color = '#9ca3af';
 
-  // helper: reset to no-discount state
   function resetTotal() {
     currentTotal = BASE_TOTAL;
     originalEl.textContent = '$' + BASE_TOTAL.toFixed(2);
@@ -461,19 +439,16 @@ function applyPromo() {
   let message = '';
 
  
-  // PROMO RULES
   if (code === 'SEC0ND1') {
-    newTotal = BASE_TOTAL * 0.80; // 20% OFF
+    newTotal = BASE_TOTAL * 0.80;
     message = 'Promo applied: 20% off (SEC0ND1).';
   } else {
-    // invalid: revert UI
     resetTotal();
     msgEl.textContent = 'Invalid or expired promo code.';
     msgEl.style.color = '#f97316';
     return;
   }
 
-  // apply discount UI
   currentTotal = newTotal;
   originalEl.textContent = '$' + BASE_TOTAL.toFixed(2);
   originalEl.style.textDecoration = 'line-through';
@@ -489,7 +464,6 @@ function applyPromo() {
   msgEl.style.color = '#22c55e';
 }
 
-// init on load
 document.addEventListener('DOMContentLoaded', function() {
   toggleCardDetails();
 });

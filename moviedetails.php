@@ -28,7 +28,6 @@ $movieId = $_GET['id'] ?? '';
 if (!$movieId) die("Missing movie id.");
 $_SESSION['selected_movie_id'] = $movieId;
 
-/*Fetch movie details (prepared)*/
 $sqlMovie = "SELECT 
   MovieCode AS movie_id, Title AS title, PosterPath AS poster_path,
   Synopsis AS synopsis, Genre AS genre, TicketPrice AS ticket_price,
@@ -76,7 +75,6 @@ $st->close();
 </head>
 <body>
 
-<!-- Header -->
   <header>
     <div id="wrapper">
       <div class="container header_bar">
@@ -121,7 +119,6 @@ $st->close();
 <main class="section">
   <div class="container">
 
-    <!-- Title row -->
     <div class="details_titlebar">
       <h1 class="movie_title"><?= e($movie['title']) ?></h1>
       <?php if (!empty($movie['trailer_url'])): ?>
@@ -131,14 +128,11 @@ $st->close();
       <?php endif; ?>
     </div>
 
-    <!-- Main details layout -->
     <div class="details_layout">
-      <!-- Poster (left) -->
       <div class="poster_lg">
         <img src="<?= e($movie['poster_path']) ?>" alt="<?= e($movie['title']) ?> Poster">
       </div>
 
-      <!-- Right column -->
       <div class="details_right">
 
         <section class="facts_box">
@@ -154,7 +148,6 @@ $st->close();
           <p><?= nl2br(e($movie['synopsis'])) ?></p>
         </section>
 
-        <!-- ===== Timeslot panel (UI) ===== -->
 <section class="timeslot_panel" aria-labelledby="ts-title">
   <div class="timeslot_head">
     <h3 id="ts-title" style="margin:0;"> 🕒 Choose your preferred timeslot</h3>
@@ -179,13 +172,10 @@ $st->close();
       Hall: <?= e($singleHall ?: 'TBC') ?>
     </div>
 
-    <!-- Form posts to your booking page -->
     <form method="post" action="proceed2seats.php" class="ts-form">
-      <!-- Required: pass movie id & title forward -->
       <input type="hidden" name="movie_id" value="<?= e($movieId) ?>">
       <input type="hidden" name="movie_title" value="<?= e($movie['title']) ?>">
 
-      <!-- Date -->
       <div class="ts-row" style="margin:.75rem 0;">
         <label for="show_date" style="margin-right:.5rem;font-weight:600;">Date:</label>
         <input type="date" id="show_date" name="show_date"
@@ -193,7 +183,6 @@ $st->close();
       </div>
       
       <input type="hidden" name="hall_id" value="<?= e($singleHall) ?>">
-      <!-- Timeslots as radio pills -->
       <div class="ts-pills" style="display:flex;gap:.5rem;flex-wrap:wrap;margin:.75rem 0;">
         <?php foreach ($slots as $i => $s): $rid = 'ts_' . $i; ?>
           <input type="radio"
@@ -270,7 +259,6 @@ $st->close();
 </footer>
 
 <script>
-//Validate date
 const show_date = document.getElementById('show_date');
 const form      = document.querySelector('.ts-form');
 
@@ -301,7 +289,6 @@ function validateShowDate(event) {
   return true;
 }
 
-// Hook into form submission
 if (form) {
   form.addEventListener("submit", validateShowDate);
 }

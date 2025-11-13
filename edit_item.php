@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// make sure cart exists and index is valid
 if (empty($_SESSION['cart']) || !is_array($_SESSION['cart'])) {
     header("Location: cart.php");
     exit;
@@ -19,15 +18,14 @@ if (!isset($_SESSION['cart'][$itemIndex])) {
     exit;
 }
 
-// read posted info
-$movie_id   = $_POST['movie_id']   ?? '';
-$show_date  = $_POST['show_date']  ?? '';
-$timeslot   = $_POST['timeslot']   ?? '';
-$timeslot12 = $_POST['timeslot12'] ?? '';
-$hall_id    = $_POST['hall_id']    ?? '';
-$seatsCSV   = $_POST['seats']      ?? ''; // "A1,B2,B3"
 
-// turn seats string into array
+$movie_id = $_POST['movie_id']   ?? '';
+$show_date = $_POST['show_date']  ?? '';
+$timeslot = $_POST['timeslot']   ?? '';
+$timeslot12 = $_POST['timeslot12'] ?? '';
+$hall_id = $_POST['hall_id']    ?? '';
+$seatsCSV = $_POST['seats']      ?? ''; 
+
 $prevSeats = [];
 if ($seatsCSV !== '') {
     foreach (explode(',', $seatsCSV) as $s) {
@@ -36,18 +34,15 @@ if ($seatsCSV !== '') {
     }
 }
 
-// save edit context in session
 $_SESSION['edit_target'] = [
-    'cart_index' => $itemIndex,     // which cart item we're editing
-    'movie_id'   => $movie_id,
-    'show_date'  => $show_date,
-    'timeslot'   => $timeslot,
-    'timeslot12' => $timeslot12,    // nice display time
-    'hall_id'    => $hall_id,
-    'prev_seats' => $prevSeats,     // seats to pre-highlight
+    'cart_index' => $itemIndex,     
+    'movie_id' => $movie_id,
+    'show_date' => $show_date,
+    'timeslot' => $timeslot,
+    'timeslot12' => $timeslot12,    
+    'hall_id' => $hall_id,
+    'prev_seats' => $prevSeats,     
 ];
 
-// now send them to the seat selection page for THIS showtime
-// change "seat_booking.php" to your actual seat picking page filename
 header("Location: seat_booking.php?edit=1");
 exit;

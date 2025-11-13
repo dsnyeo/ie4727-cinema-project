@@ -13,9 +13,7 @@ if (isset($_POST['login'])) {
 
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
-    // $password = md5($password); // uncomment if registration hashes passwords
 
-    // --- Prepare statement for security ---
     if (!($stmt = $dbcnx->prepare("SELECT UserID, Username, UserPassword, Email FROM users WHERE Username = ? AND UserPassword = ? LIMIT 1"))) {
         die("Database error: " . $dbcnx->error);
     }
@@ -30,13 +28,11 @@ if (isset($_POST['login'])) {
         $_SESSION['sess_user_id'] = $row['UserID'];
         $_SESSION['sess_user_email'] = $row['Email'];
 
-        // ✅ If username is admin → redirect to admin page
         if (strtolower($row['Username']) === 'admin') {
             header("Location: adminMovie.php");
             exit;
         }
 
-        // ✅ Otherwise normal user → go home
         header("Location: index.php");
         exit;
     } else {

@@ -14,10 +14,6 @@ $cartItems = $_SESSION['cart']; // raw items from session
 
 $PRICE_PER_SEAT = $_SESSION['ticket_price'];
 
-/**
- * Merge items that refer to the same show:
- * same movie_id, hall_id, show_date, timeslot.
- */
 $merged = [];
 
 foreach ($cartItems as $ci) {
@@ -34,7 +30,6 @@ foreach ($cartItems as $ci) {
         continue;
     }
 
-    // unique key for a showtime
     $key = implode('|', [$movie_id, $hall_id, $show_date, $timeslot]);
 
     if (!isset($merged[$key])) {
@@ -49,21 +44,13 @@ foreach ($cartItems as $ci) {
         ];
     }
 
-    // merge seats & remove duplicates
     $merged[$key]['seats'] = array_values(array_unique(
         array_merge($merged[$key]['seats'], $seats)
     ));
 }
 
-// use merged items everywhere below
 $cartItems = array_values($merged);
-
-// optional: keep session clean so other pages also see merged version
 $_SESSION['cart'] = $cartItems;
-
-
-
-// compute grand total safely
 $grandTotalRaw = 0;
 $displayItemCount = 0;
 
@@ -72,7 +59,7 @@ foreach ($cartItems as $ci) {
     $qty = count($seatList);
 
     if ($qty === 0) {
-        continue; // ignore empty ghost entries
+        continue; 
     }
 
     $grandTotalRaw += $qty * $PRICE_PER_SEAT;
@@ -91,7 +78,7 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
 
 </head>
 <body>
-  <!-- Header -->
+
   <header>
     <div id="wrapper">
       <div class="container header_bar">
@@ -135,8 +122,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
 
   <div class="cart-container">
    <div class="cart-shell">
-
-    <!-- Cart Header -->
     <div class="cart-header">
       <div class="cart-title">Your Cart</div>
       <div class="cart-sub">
@@ -144,10 +129,8 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
       </div>
     </div>
 
-    <!-- Cart Items List -->
     <div class="cart-items-list">
       <?php
-  // filter out any empty entries
     $nonEmptyItems = array_values(array_filter($cartItems, function($ci){
       return !empty($ci['seats']) && is_array($ci['seats']) && count($ci['seats']) > 0;
   }));
@@ -171,7 +154,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
       ?>
       <div class="cart-item">
 
-        <!-- movie + session row -->
         <div class="item-topline">
           <div class="movie-block">
             <p class="white-movie-title"><?= e($movie_title) ?></p>
@@ -189,14 +171,11 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
           </div>
         </div>
 
-        <!-- seats -->
         <div class="seat-line">
           <?php foreach ($seatsArray as $seat): ?>
             <span class="seat-chip"><?= e($seat) ?></span>
           <?php endforeach; ?>
         </div>
-
-        <!-- per-item price -->
         <div class="item-price-row">
           <div class="label">
             Tickets (<?= $qty ?> × $<?= number_format($PRICE_PER_SEAT,2) ?>/seat)
@@ -206,10 +185,7 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
           </div>
         </div>
 
-        <!-- edit/remove actions for this line item -->
         <div class="actions" style="margin-top:.5rem;">
-
-          <!-- Edit seats for this specific session -->
           <form action="edit_item.php" method="post" style="flex:1 1 auto; min-width:140px;">
             <input type="hidden" name="item_index" value="<?= $index ?>">
             <input type="hidden" name="movie_id" value="<?= e($movie_id) ?>">
@@ -221,7 +197,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
             <button class="btn-ghost" type="submit">Edit seats</button>
           </form>
 
-          <!-- Remove this session from cart -->
           <form action="remove_item.php" method="post" style="flex:1 1 auto; min-width:140px;">
             <input type="hidden" name="item_index" value="<?= $index ?>">
             <button class="btn-ghost" type="submit">Remove</button>
@@ -236,7 +211,6 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
       <?php endforeach; endif; ?>
     </div>
 
-    <!-- Grand total summary -->
     <div class="cart-summary">
       <div class="summary-row">
         <div class="label">Items in cart</div>
@@ -249,14 +223,10 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
       </div>
     </div>
 
-    <!-- Final actions -->
     <div class="actions">
-      <!-- Checkout all items -->
       <form action="checkout.php" method="post" id="checkoutForm" style="flex:1 1 auto; min-width:180px;">
-        <!-- Send primitive fields only -->
         <input type="hidden" name="grand_total" value="<?= e($grandTotalRaw) ?>">
 
-        <!-- We'll also send minimal info for each item as normal POST fields -->
         <?php foreach ($cartItems as $i => $ci): 
             $ci_movie_id    = $ci['movie_id']    ?? '';
             $ci_movie_title = $ci['movie_title'] ?? '';
@@ -279,13 +249,12 @@ $grandTotalFmt = number_format($grandTotalRaw, 2);
         <button type="submit" class="btn-checkout">Checkout →</button>
       </form>
 
-      <!-- Continue shopping / add more -->
       <a class="btn-ghost" href="index.php">Add more showtimes</a>
     </div>
 
   </div>
     </div>
-<!-- Footer -->
+    
 <footer class="site_footer">
   <div class="container footer_panels">
     <div class="footer_panel left">

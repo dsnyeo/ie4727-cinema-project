@@ -4,7 +4,7 @@ include "dbconnect.php";
 
 function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
 
-// 1) Validate
+//Validate
 if (
     empty($_POST['cust_name']) ||
     empty($_POST['cust_email']) ||
@@ -22,7 +22,7 @@ $grandTotal    = (float) $_POST['grand_total'];
 $userId        = $_SESSION['sess_user_id'] ?? null;
 if ($grandTotal < 0) $grandTotal = 0;
 
-// Apply promo code (server-side check)
+//promo code 
 $promoCode = strtoupper(trim($_POST['applied_promo'] ?? ''));
 
 if ($promoCode === 'SEC0ND1') {
@@ -31,7 +31,6 @@ if ($promoCode === 'SEC0ND1') {
 
 $grandTotal = round($grandTotal, 2);
 
-// Optional: last4
 $cardLast4 = null;
 if ($paymentMethod === 'card') {
     $digits = preg_replace('/\D/', '', $_POST['card_number'] ?? '');
@@ -41,7 +40,7 @@ if ($paymentMethod === 'card') {
 $dbcnx->begin_transaction();
 
 try {
-    // 2) Insert booking
+    //Insert booking
     $sqlBooking = "INSERT INTO bookings
       (CustName, CustEmail, CustPhone, PaymentMethod, PaidAmount, UserID)
       VALUES (?,?,?,?,?,?)";
@@ -53,7 +52,7 @@ try {
     $orderId = $stmt->insert_id;
     $stmt->close();
 
-    // 3) Insert tickets
+    //Insert tickets
     $sqlTicket = "INSERT INTO tickets
       (OrderID, HallID, ShowDate, TimeSlot, SeatCode, MovieCode, UserID)
       VALUES (?,?,?,?,?,?,?)";
@@ -70,11 +69,11 @@ try {
         $timeslot12 = $it['timeslot12']  ?? '';
         $seatsCSV   = $it['seats']       ?? '';
 
-        // Make sure seats are an array
+        //Make sure seats are an array
         $seatsArr = array_filter(array_map('trim', explode(',', $seatsCSV)));
         if (count($seatsArr) === 0) continue;
 
-        // Insert each seat into tickets
+        //Insert each seat into tickets
         foreach ($seatsArr as $seatCode) {
             $userIdForBind = ($userId === null) ? null : (int)$userId;
             $stmtT->bind_param("isssssi",
@@ -92,7 +91,7 @@ try {
             }
         }
 
-        // Build one summary row for email
+        //Build one summary row for email
         $emailRows[] = [
             'movie' => $movieTitle,
             'date'  => $showDate,
@@ -104,18 +103,17 @@ try {
     }
     $stmtT->close();
 
-    // 4) Commit
+    //Commit
     $dbcnx->commit();
 
-    // 5) Clear cart
+    //Clear cart
     unset($_SESSION['cart']);
 
-    // 6) Send acknowledgment email
+    //Send acknowledgment email
     $from    = 'cineluxadm@localhost.com';
     $EOL     = "\r\n";
     $subject = "Booking Confirmation • Ref Order#{$orderId}";
 
-    // Build email HTML table
     $rowsHtml = '';
     foreach ($emailRows as $r) {
         $rowsHtml .= '<tr>'.
@@ -158,7 +156,6 @@ try {
 
     @mail($custEmail, $subject, $body, $headers, '-f'.$from);
 
-    // 7) Redirect with popup
     echo "<script>
             alert('Booking is successful! Confirmation email has been sent to {$custEmail}.');
             window.location.href = 'index.php?order_id={$orderId}';

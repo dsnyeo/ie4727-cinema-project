@@ -251,7 +251,6 @@ svg#lineChart {
       <!-- Table -->
       <div class="card">
         <h2>Daily Breakdown</h2>
-        <small>Summarised by show date from tickets × movie ticket price.</small>
         <table>
           <thead>
             <tr><th>Date</th><th>Tickets Sold</th><th>Total Sales ($)</th></tr>
@@ -270,7 +269,7 @@ svg#lineChart {
 
       <!-- Line Chart -->
       <div class="card">
-        <h2>Sales Trend (Line Chart)</h2>
+        <h2>Sales Trend</h2>
         <small>Total sales per day, showing last 7 show dates.</small>
         <div class="chart-wrap">
           <svg id="lineChart"></svg>
@@ -281,7 +280,7 @@ svg#lineChart {
 </div>
 
 <script>
-// ===== Line chart render (no library) =====
+//Line chart render 
 (function(){
   const labels = <?= json_encode($labels) ?>;
   const data = <?= json_encode($sales) ?>;

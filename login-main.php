@@ -12,7 +12,7 @@ if ($flash) {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Cinema Website</title>
+  <title>CineLux</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="login_page">
@@ -21,7 +21,6 @@ if ($flash) {
       <?php echo $flash_safe; ?>
     </div>
   <?php endif; ?>
-  <!-- Header -->
   <header>
     <div id="wrapper">
       <div class="container header_bar">
@@ -78,7 +77,6 @@ if ($flash) {
     <p>Don’t have an account? <a href="register-main.php">Register here</a></p>
   </div>
 
-  <!-- Footer -->
 <footer class="site_footer">
   <div class="container footer_panels">
     <div class="footer_panel left">

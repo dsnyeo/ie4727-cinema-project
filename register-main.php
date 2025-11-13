@@ -81,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .invalid { border-color:#ad2a2a !important; box-shadow: 0 0 0 2px rgba(173,42,42,0.2); }
   </style>
 </head>
-<!-- Header -->
   <header>
     <div id="wrapper">
       <div class="container header_bar">

@@ -7,20 +7,18 @@ if (empty($_SESSION['booking'])) {
     exit;
 }
 
-// pull what we stored earlier in the booking session
 $b = $_SESSION['booking'];
 
 $movieId     = $b['movie_id']     ?? '';
 $movieTitle  = $b['movie_title']  ?? '';
 $hallId      = $b['hall_id']      ?? '';
 $showDate    = $b['show_date']    ?? '';
-$timeslot    = $b['timeslot']     ?? '';     // "HH:MM:SS" for DB
-$timeslot12  = $b['timeslot_12']  ?? '';     // "7:30 PM"
+$timeslot    = $b['timeslot']     ?? '';     
+$timeslot12  = $b['timeslot_12']  ?? '';     
 
-// seat map layout
 $rows       = ['A','B','C','D','E'];
-$colsLeft   = ['1','2','3','4'];  // seats block 1
-$colsRight  = ['5','6','7','8'];  // seats block 2
+$colsLeft   = ['1','2','3','4'];  
+$colsRight  = ['5','6','7','8'];  
 
 $isEditMode        = false;
 $editingIndex      = null;
@@ -50,13 +48,11 @@ if (!empty($_GET['edit']) && !empty($_SESSION['edit_target'])) {
         $movieId = $_SESSION['edit_target']['movie_id'];
     }
 
-    // We didn't store movie_title in edit_target, but we *can* pull it from cart
     if ($editingIndex !== null &&
         isset($_SESSION['cart'][$editingIndex]['movie_title'])) {
         $movieTitle = $_SESSION['cart'][$editingIndex]['movie_title'];
     }
 }
-// 3. Query all seats already booked for THIS hall/date/timeslot
 $bookedSeats = [];
 
 $sqlBooked = "SELECT SeatCode 
@@ -70,7 +66,7 @@ if ($stmt = $dbcnx->prepare($sqlBooked)) {
     $stmt->execute();
     $res = $stmt->get_result();
     while ($row = $res->fetch_assoc()) {
-        $bookedSeats[] = $row['SeatCode']; // e.g. "A1"
+        $bookedSeats[] = $row['SeatCode']; 
     }
     $stmt->close();
 }
@@ -127,16 +123,13 @@ if ($stmt = $dbcnx->prepare($sqlBooked)) {
   <main class="container">
      <h1>Choose Your Seats</h1>
 
-    <!-- Top summary cards -->
     <div class="seat-header">
-      <!-- Movie summary -->
       <div class="summary-box">
         <h4>MOVIE</h4>
         <div class="movie-title"><?= e($movieTitle) ?></div>
         <div class="movie-code">Code: <?= e($movieId) ?></div>
       </div>
 
-      <!-- Session summary -->
       <div class="summary-box">
         <h4>SESSION</h4>
         <div class="session-meta">
@@ -147,7 +140,6 @@ if ($stmt = $dbcnx->prepare($sqlBooked)) {
       </div>
     </div>
 
-    <!-- Seat plan box now BELOW, centered -->
     <div id="seatPlanBox" class="seat-plan-wrapper" style="display:block;">
   <div class="plan-header">
     <span>Seat Availability</span>
@@ -162,15 +154,13 @@ if ($stmt = $dbcnx->prepare($sqlBooked)) {
 foreach ($rows as $r) {
     echo '<div class="seat-row">';
 
-    // LEFT BLOCK seats 1-4
     echo '<div class="block">';
     foreach ($colsLeft as $c) {
-        $code = $r.$c; // e.g. "A1"
+        $code = $r.$c; 
 
         $isBooked = in_array($code, $bookedSeats);
         $wasMine  = in_array($code, $preSelectedSeats);
 
-        // build CSS classes
         $classList = 'seat';
         if ($isBooked) {
             $classList .= ' booked';
@@ -191,8 +181,7 @@ foreach ($rows as $r) {
         echo $safeCode . "</div>";
     }
     echo '</div>';
-
-    // RIGHT BLOCK seats 5-8
+    
     echo '<div class="block">';
     foreach ($colsRight as $c) {
         $code = $r.$c;

@@ -163,7 +163,7 @@ function e($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
           gap: .5rem;
         }
         .seat-chip {
-          background: #0b1222;   /* whatever you currently use */
+          background: #0b1222;  
           color: #e2e8f0;
           border: 1px solid #334155;
           padding: .25rem .6rem;

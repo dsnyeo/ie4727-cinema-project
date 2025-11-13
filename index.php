@@ -6,7 +6,6 @@ if (!isset($dbcnx) || $dbcnx->connect_errno) {
   die("Database connection not found or failed.");
 }
 
-/*6 trending movies (NOW SHOWING)*/
 $sql_now = "SELECT 
               MovieCode AS movie_id,
               Title AS title,
@@ -26,7 +25,6 @@ $sql_now = "SELECT
 $res_now = $dbcnx->query($sql_now);
 $now_movies = $res_now && $res_now->num_rows > 0 ? $res_now->fetch_all(MYSQLI_ASSOC) : [];
 
-/*6 older movies (Trending = 0)*/
 $sql_old = "SELECT 
               MovieCode AS movie_id,
               Title AS title,
@@ -53,12 +51,12 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Cinema Website</title>
+  <title>CineLux</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Header -->
-  <header>
+  
+<header>
     <div id="wrapper">
       <div class="container header_bar">
         <a class="brand" href="index.php">
@@ -128,7 +126,6 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
       </div>
     </section>
 
-    <!-- OLDER MOVIES -->
     <section class="section">
       <div class="container">
         <h2 class="section_title">OLDER MOVIES</h2>
@@ -158,7 +155,6 @@ function e($s){ return htmlspecialchars($s ?? '', ENT_QUOTES, 'UTF-8'); }
     </section>
   </main>
 
-  <!-- Footer -->
 <footer class="site_footer">
 
   <div class="container footer_panels">
