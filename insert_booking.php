@@ -40,7 +40,6 @@ if ($paymentMethod === 'card') {
 $dbcnx->begin_transaction();
 
 try {
-    //Insert booking
     $sqlBooking = "INSERT INTO bookings
       (CustName, CustEmail, CustPhone, PaymentMethod, PaidAmount, UserID)
       VALUES (?,?,?,?,?,?)";
@@ -52,7 +51,6 @@ try {
     $orderId = $stmt->insert_id;
     $stmt->close();
 
-    //Insert tickets
     $sqlTicket = "INSERT INTO tickets
       (OrderID, HallID, ShowDate, TimeSlot, SeatCode, MovieCode, UserID)
       VALUES (?,?,?,?,?,?,?)";
@@ -69,11 +67,9 @@ try {
         $timeslot12 = $it['timeslot12'] ?? '';
         $seatsCSV = $it['seats'] ?? '';
 
-        //Make sure seats are an array
         $seatsArr = array_filter(array_map('trim', explode(',', $seatsCSV)));
         if (count($seatsArr) === 0) continue;
 
-        //Insert each seat into tickets
         foreach ($seatsArr as $seatCode) {
             $userIdForBind = ($userId === null) ? null : (int)$userId;
             $stmtT->bind_param("isssssi",
@@ -91,7 +87,6 @@ try {
             }
         }
 
-        //Build one summary row for email
         $emailRows[] = [
             'movie' => $movieTitle,
             'date' => $showDate,
@@ -103,10 +98,8 @@ try {
     }
     $stmtT->close();
 
-    //Commit
     $dbcnx->commit();
 
-    //Clear cart
     unset($_SESSION['cart']);
 
     //Send acknowledgment email
