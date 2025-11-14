@@ -147,7 +147,7 @@ if ($selectedCode !== '') {
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>CineLux Admin - Update Movies</title>
+  <title>CineLux Admin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="styles.css">
 
@@ -381,12 +381,6 @@ if ($selectedCode !== '') {
   <div class="admin-header">
     <div>
       <div class="badge">CineLux Admin</div>
-      <h1>Update Movies</h1>
-      <p class="sub">
-        Your cinema is limited to 12 movies. Use this panel to update details
-        and control whether each movie appears in <strong>NOW SHOWING</strong> (Trending = 1)
-        or <strong>OLDER MOVIES</strong> (Trending = 0) on the homepage.
-      </p>
     </div>
 
   </div>

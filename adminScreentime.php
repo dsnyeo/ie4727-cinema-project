@@ -8,7 +8,6 @@ if (!isset($dbcnx) || $dbcnx->connect_errno) {
     die("Database connection not found or failed.");
 }
 
-//Admin-only guard
 if (!isset($_SESSION['sess_user']) || strtolower($_SESSION['sess_user']) !== 'admin') {
     die("Access denied. Admins only.");
 }
@@ -16,7 +15,6 @@ if (!isset($_SESSION['sess_user']) || strtolower($_SESSION['sess_user']) !== 'ad
 $successMsg = "";
 $errorMsg   = "";
 
-/* Handle update existing screentime row */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update') {
     $hall_code  = $_POST['hall_code'] ?? '';
     $timeslot   = $_POST['timeslot'] ?? '';
@@ -43,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-/*Handle add new screentime rown*/
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add') {
     $new_hall  = $_POST['new_hall_code'] ?? '';
     $new_time  = $_POST['new_timeslot'] ?? '';
@@ -68,7 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-/** Fetch all movies for dropdown */
 $movies = [];
 $movieSql = "SELECT MovieCode, Title AS MovieTitle FROM movies ORDER BY Title";
 $movieRes = $dbcnx->query($movieSql);
@@ -78,7 +74,6 @@ if ($movieRes && $movieRes->num_rows > 0) {
     }
 }
 
-/* Fetch existing screentimes */
 $screentimeSql = "
     SELECT s.hall_code, s.timeslot, s.movie_code, m.Title AS MovieTitle
     FROM screentime s
@@ -98,7 +93,6 @@ $screentimeRes = $dbcnx->query($screentimeSql);
       background:#05060a;
       color:#f5f5f5;
     }
-    /* Nav reused from before */
     .admin-nav {
       background:#0c0c14;
       border-bottom:1px solid #2c2c3e;
@@ -228,7 +222,6 @@ $screentimeRes = $dbcnx->query($screentimeSql);
 </head>
 <body>
 
-<!-- Admin Nav -->
 <header class="admin-nav">
   <div class="admin-nav-container">
     <div class="admin-brand">CineLux Admin</div>
@@ -254,7 +247,6 @@ $screentimeRes = $dbcnx->query($screentimeSql);
     <?php endif; ?>
 
     <div class="grid">
-        <!-- Left: Add New Screentime -->
         <div class="card">
             <h2>Add New Screentime</h2>
             <small>Create a new (Hall, Timeslot) entry and bind it to a movie.</small>
@@ -294,7 +286,6 @@ $screentimeRes = $dbcnx->query($screentimeSql);
             </form>
         </div>
 
-        <!-- Right: Existing Screentimes -->
         <div class="card">
             <h2>Existing Screentimes</h2>
             <small>Update assigned movies for current hall & timeslot combinations.</small>

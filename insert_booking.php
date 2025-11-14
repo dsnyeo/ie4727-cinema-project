@@ -14,12 +14,12 @@ if (
     empty($_POST['item']) || !is_array($_POST['item'])
 ) { die("Missing required checkout data."); }
 
-$custName      = $_POST['cust_name'];
-$custEmail     = $_POST['cust_email'];
-$custPhone     = $_POST['cust_phone'];
+$custName = $_POST['cust_name'];
+$custEmail = $_POST['cust_email'];
+$custPhone = $_POST['cust_phone'];
 $paymentMethod = $_POST['payment_method'];
-$grandTotal    = (float) $_POST['grand_total'];
-$userId        = $_SESSION['sess_user_id'] ?? null;
+$grandTotal = (float) $_POST['grand_total'];
+$userId = $_SESSION['sess_user_id'] ?? null;
 if ($grandTotal < 0) $grandTotal = 0;
 
 //promo code 
@@ -61,13 +61,13 @@ try {
     $emailRows = [];
 
     foreach ($_POST['item'] as $it) {
-        $movieCode  = $it['movie_id']    ?? '';
+        $movieCode = $it['movie_id'] ?? '';
         $movieTitle = $it['movie_title'] ?? '';
-        $hallId     = $it['hall_id']     ?? '';
-        $showDate   = $it['show_date']   ?? '';
-        $timeslot   = $it['timeslot']    ?? ''; 
-        $timeslot12 = $it['timeslot12']  ?? '';
-        $seatsCSV   = $it['seats']       ?? '';
+        $hallId = $it['hall_id'] ?? '';
+        $showDate = $it['show_date'] ?? '';
+        $timeslot = $it['timeslot'] ?? ''; 
+        $timeslot12 = $it['timeslot12'] ?? '';
+        $seatsCSV = $it['seats'] ?? '';
 
         //Make sure seats are an array
         $seatsArr = array_filter(array_map('trim', explode(',', $seatsCSV)));
@@ -94,9 +94,9 @@ try {
         //Build one summary row for email
         $emailRows[] = [
             'movie' => $movieTitle,
-            'date'  => $showDate,
-            'time'  => ($timeslot12 ?: $timeslot),
-            'hall'  => $hallId,
+            'date' => $showDate,
+            'time' => ($timeslot12 ?: $timeslot),
+            'hall' => $hallId,
             'seats' => implode(', ', $seatsArr),
             'count' => count($seatsArr)
         ];
@@ -110,8 +110,8 @@ try {
     unset($_SESSION['cart']);
 
     //Send acknowledgment email
-    $from    = 'cineluxadm@localhost.com';
-    $EOL     = "\r\n";
+    $from = 'cineluxadm@localhost.com';
+    $EOL = "\r\n";
     $subject = "Booking Confirmation • Ref Order#{$orderId}";
 
     $rowsHtml = '';
@@ -151,7 +151,7 @@ try {
       <p>Use it on your second checkout!</p>
     </div>';
 
-    $headers  = "From: {$from}{$EOL}Reply-To: {$from}{$EOL}";
+    $headers = "From: {$from}{$EOL}Reply-To: {$from}{$EOL}";
     $headers .= "MIME-Version: 1.0{$EOL}Content-Type: text/html; charset=UTF-8{$EOL}";
 
     @mail($custEmail, $subject, $body, $headers, '-f'.$from);

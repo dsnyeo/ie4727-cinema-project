@@ -248,7 +248,6 @@ svg#lineChart {
     <p style="color:#9a9ab5;font-size:.9rem;">No sales data available yet.</p>
   <?php else: ?>
     <div class="grid">
-      <!-- Table -->
       <div class="card">
         <h2>Daily Breakdown</h2>
         <table>
@@ -267,7 +266,6 @@ svg#lineChart {
         </table>
       </div>
 
-      <!-- Line Chart -->
       <div class="card">
         <h2>Sales Trend</h2>
         <small>Total sales per day, showing last 7 show dates.</small>
@@ -280,7 +278,6 @@ svg#lineChart {
 </div>
 
 <script>
-//Line chart render 
 (function(){
   const labels = <?= json_encode($labels) ?>;
   const data = <?= json_encode($sales) ?>;
@@ -298,7 +295,6 @@ svg#lineChart {
   const xStep = (width - padding * 2) / (n - 1);
   const yScale = (val) => height - padding - (val - minY) / (maxY - minY) * (height - padding * 1.5);
 
-  // draw axes
   const createLine = (x1,y1,x2,y2,cls) => {
     const l = document.createElementNS('http://www.w3.org/2000/svg','line');
     l.setAttribute('x1',x1); l.setAttribute('y1',y1);
@@ -306,10 +302,9 @@ svg#lineChart {
     l.setAttribute('class',cls);
     svg.appendChild(l);
   };
-  createLine(padding, height-padding, width-padding, height-padding, 'axis-line'); // x-axis
-  createLine(padding, padding/2, padding, height-padding, 'axis-line'); // y-axis
+  createLine(padding, height-padding, width-padding, height-padding, 'axis-line'); //x-axis
+  createLine(padding, padding/2, padding, height-padding, 'axis-line'); //y-axis
 
-  // path for line
   let pathD = '';
   data.forEach((val,i)=>{
     const x = padding + i * xStep;
@@ -321,7 +316,6 @@ svg#lineChart {
   path.setAttribute('class','line');
   svg.appendChild(path);
 
-  // dots + labels
   data.forEach((val,i)=>{
     const x = padding + i * xStep;
     const y = yScale(val);
@@ -334,7 +328,7 @@ svg#lineChart {
     lbl.setAttribute('x',x);
     lbl.setAttribute('y',height - padding + 14);
     lbl.setAttribute('class','axis-label');
-    lbl.textContent = labels[i].slice(5); // MM-DD
+    lbl.textContent = labels[i].slice(5); 
     svg.appendChild(lbl);
   });
 })();
