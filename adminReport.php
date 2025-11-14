@@ -202,7 +202,6 @@ svg#lineChart {
 </header>
 
 <div class="admin-wrapper">
-  <h1>Sales Report</h1>
   <p class="sub">Daily ticket sales and top-performing movie.</p>
 
   <?php if ($topMovie): ?>
