@@ -164,7 +164,6 @@ $screentimeRes = $dbcnx->query($screentimeSql);
       stroke-width:1;
     }
 
-    /* Form + button styling to match theme */
     select, input[type="text"], input[type="time"] {
       background:#10101a;
       border:1px solid #2c2c3e;

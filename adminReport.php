@@ -8,12 +8,10 @@ if (!isset($dbcnx) || $dbcnx->connect_errno) {
     die("Database connection not found or failed.");
 }
 
-/* --- Simple admin check --- */
 if (!isset($_SESSION['sess_user']) || strtolower($_SESSION['sess_user']) !== 'admin') {
     die("Access denied. Admins only.");
 }
 
-/* --- Fetch daily sales (by ShowDate) --- */
 $daily = [];
 $sql = "
     SELECT 
@@ -33,7 +31,6 @@ if ($res = $dbcnx->query($sql)) {
     $res->close();
 }
 
-/* --- Fetch top-selling movies (by tickets sold) --- */
 $topMovies = [];
 $sqlTop = "
     SELECT 
@@ -57,7 +54,6 @@ if ($res = $dbcnx->query($sqlTop)) {
 $topMovie = $topMovies[0] ?? null;
 
 
-/* Prepare data for chart */
 $labels = [];
 $sales = [];
 $maxSales = 0.0;
@@ -82,7 +78,6 @@ body {
   background:#05060a;
   color:#f5f5f5;
 }
-/* Nav reused from before */
 .admin-nav {
   background: #0c0c14;
   border-bottom: 1px solid #2c2c3e;
@@ -188,7 +183,6 @@ svg#lineChart {
 </head>
 <body>
 
-<!-- Admin Nav -->
 <header class="admin-nav">
   <div class="admin-nav-container">
     <div class="admin-brand"><strong>CineLux</strong> Admin Panel</div>

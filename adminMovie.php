@@ -2,7 +2,6 @@
 session_start();
 include "dbconnect.php";
 
-/* --- SIMPLE ADMIN CHECK (adjust as needed) --- */
 if (!isset($_SESSION['sess_user'])) {
     die("Access denied. Please log in as admin.");
 }
@@ -16,7 +15,6 @@ if (!isset($dbcnx) || $dbcnx->connect_errno) {
 $errors = [];
 $messages = [];
 
-/* --- FETCH ALL MOVIES (for sidebar list) --- */
 $movies = [];
 $sql_all = "SELECT 
               MovieCode,
@@ -34,13 +32,11 @@ if ($res = $dbcnx->query($sql_all)) {
     $errors[] = "Failed to fetch movies list: " . e($dbcnx->error);
 }
 
-/* --- DETERMINE SELECTED MOVIE CODE --- */
 $selectedCode = $_POST['selected_code'] ?? ($_GET['edit'] ?? '');
 if ($selectedCode === '' && !empty($movies)) {
-    $selectedCode = $movies[0]['MovieCode']; // default to first
+    $selectedCode = $movies[0]['MovieCode']; 
 }
 
-/* --- HANDLE UPDATE SUBMISSION --- */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'update_movie') {
     $movieCode  = trim($_POST['movie_code'] ?? '');
     $title      = trim($_POST['title'] ?? '');
@@ -116,7 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'updat
 }
 
 
-/* --- FETCH SELECTED MOVIE DETAILS FOR FORM --- */
 $selected = null;
 if ($selectedCode !== '') {
     $sql_one = "SELECT 
@@ -158,7 +153,6 @@ if ($selectedCode !== '') {
       color:#f5f5f5;
     }
 
-/* === Admin Navigation Bar === */
 .admin-nav {
   background: #0c0c14;
   border-bottom: 1px solid #2c2c3e;
@@ -302,8 +296,8 @@ if ($selectedCode !== '') {
     padding: .1rem .4rem;
     border-radius: 999px;
     border: 1px solid #3a3a5c;
-    white-space: nowrap;          /* <— Prevents text split */
-    display: inline-block;        /* <— Ensures it's treated as a single unit */
+    white-space: nowrap;          
+    display: inline-block;        
     line-height: 1;
     }
     .movie-item.now span.badge-mini {
@@ -362,7 +356,6 @@ if ($selectedCode !== '') {
   </style>
 </head>
 <body>
-<!-- Admin Navigation Bar -->
 <header class="admin-nav">
   <div class="admin-nav-container">
     <div class="admin-brand">
@@ -394,7 +387,6 @@ if ($selectedCode !== '') {
   <?php endforeach; ?>
 
   <div class="layout">
-    <!-- LEFT: MOVIE LIST -->
     <div class="card">
       <h2>Movies (max 12)</h2>
       <small>Select a movie to edit its details.</small>
@@ -428,7 +420,6 @@ if ($selectedCode !== '') {
       </div>
     </div>
 
-    <!-- RIGHT: UPDATE FORM -->
     <div class="card">
       <h2>Edit Movie Details</h2>
       <?php if (!$selected): ?>
@@ -521,10 +512,8 @@ if ($selectedCode !== '') {
 </div>
 
 <script>
-// when clicking on a movie in the sidebar, reload page for that movie
 function selectMovie(code) {
   if (!code) return;
-  // simple GET reload with ?edit=
   window.location.href = 'adminMovie.php?edit=' + encodeURIComponent(code);
 }
 </script>
